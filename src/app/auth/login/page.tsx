@@ -1,6 +1,6 @@
 'use client';
 
-import { FakeLogin, Login } from '@/Services/AngoraDbService';
+import { CookieLogin } from '@/services/AuthLogin';
 import React, { useState } from 'react'
 
 export default function LoginPage() {
@@ -10,18 +10,12 @@ export default function LoginPage() {
     event.preventDefault();
     console.log("HelloSubmit", userName, password)
 
-  const login = await FakeLogin(userName, password, false);
-
-  const accessToken = login.accessToken;
-
-  document.cookie = `accessToken=${accessToken}`
-
+    CookieLogin(userName, password, false)
   }
-
   return (
     <form onSubmit={onSubmitHandler}>
-      <input onChange={e => {setUserName(e.target.value)}} type="text"/>
-      <input onChange={e => {setPassword(e.target.value)}} type="text"/>
+      <input onChange={e => { setUserName(e.target.value) }} type="text" />
+      <input onChange={e => { setPassword(e.target.value) }} type="text" />
       <button type='submit'>Login</button>
     </form>
   )
