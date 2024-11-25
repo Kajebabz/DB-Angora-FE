@@ -1,4 +1,4 @@
-import { LoginResponse, RabbitResponse } from "@/types/backendTypes";
+import { LoginResponse, RabbitProfileDTO, RabbitResponse } from "@/types/backendTypes";
 
 // ENUMs
 export async function GetRaces(): Promise<string[]> {
@@ -16,6 +16,16 @@ export async function GetOwnRabbits(accessToken: string): Promise<RabbitResponse
     const ownRabbits = await data.json();
 
     return ownRabbits;
+}
+
+export async function GetRabbitProfile(accessToken: string): Promise<RabbitProfileDTO> {
+
+    const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Profile/4977-206', {
+        headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const rabbitProfile = await data.json();
+
+    return rabbitProfile;
 }
 
 export async function Login(userName: string, password: string, rememberMe: boolean): Promise<LoginResponse> {
