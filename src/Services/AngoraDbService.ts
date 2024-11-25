@@ -20,7 +20,7 @@ export async function GetOwnRabbits(accessToken: string): Promise<RabbitResponse
 
 export async function GetRabbitProfile(accessToken: string): Promise<RabbitProfileDTO> {
 
-    const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Profile/4977-206', {
+    const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Profile/5053-0223', {
         headers: { Authorization: `Bearer ${accessToken}` }
     });
     const rabbitProfile = await data.json();
