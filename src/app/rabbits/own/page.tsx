@@ -1,4 +1,4 @@
-import { GetOwnRabbits } from '@/services/AngoraDbService'
+import { GetOwnRabbits } from '@/services/AngoraDbService';
 import { Rabbit } from '@/types/backendTypes';
 import { cookies } from 'next/headers';
 import React from 'react'
