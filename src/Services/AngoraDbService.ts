@@ -1,6 +1,8 @@
 import { LoginResponse, RabbitProfileDTO, RabbitResponse } from "@/types/backendTypes";
 
-// ENUMs
+
+
+// ENUM
 export async function GetRaces(): Promise<string[]> {
     const data = await fetch('https://db-angora.azurewebsites.net/api/Enum/Races');
     const races = await data.json();

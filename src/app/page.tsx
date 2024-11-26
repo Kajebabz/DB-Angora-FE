@@ -1,18 +1,17 @@
-import { GetRaces } from "@/services/AngoraDbService";
+'use client';
 
-const races = await GetRaces();
+import { Button } from "@nextui-org/react";
+import { GiRabbit } from "react-icons/gi";
 
 export default function Home() {
   return (
-    <div className="">
-      <h1>HEJ OG VELKOMMEN TIL DB WABBIT</h1>
-      <ul>
-        {races.map((race: string) => (
-          <li key={race}>
-            {race}
-          </li>
-        ))}
-      </ul>
+    <div className="flex flex-col justify-center items-center mt-20 gap-6 text-secondary">
+      <GiRabbit size={100} className="text-blue-700" />
+      <h1 className="text-4xl font bold">Velkommen til den Blå Kanin</h1>
+      <Button>
+        Click me
+      </Button>
     </div>
   );
 }
+
