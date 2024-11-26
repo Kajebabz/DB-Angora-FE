@@ -11,7 +11,7 @@ export type Rabbit = {
 
 export type RabbitProfileDTO = {
     "$id": number,
-    "earCombId":string,
+    "earCombId": string,
     "nickName": string,
     "originId": string,
     "ownerId": string,
@@ -47,9 +47,9 @@ export type Rabbit_ChildPreviewDTO = {
 
 
 export type RabbitResponse = {
-        "$id": number,
-        "$values": Rabbit[]
-    };
+    "$id": number,
+    "$values": Rabbit[]
+};
 
 export type LoginResponse = {
     "$id": number,
