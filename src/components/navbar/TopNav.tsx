@@ -26,9 +26,9 @@ export default function TopNav() {
                 </div>
             </NavbarBrand>
             <NavbarContent justify='center'>
-                <NavbarItem as={Link} href='rabbits/for-sale'>Salg</NavbarItem>
-                <NavbarItem as={Link} href='rabbits/for-breeding'>Breeding</NavbarItem>
-                <NavbarItem as={Link} href='rabbits/own'>Egne</NavbarItem>
+                <NavbarItem as={Link} href='/rabbits/for-sale'>Salg</NavbarItem>
+                <NavbarItem as={Link} href='/rabbits/for-breeding'>Breeding</NavbarItem>
+                <NavbarItem as={Link} href='/rabbits/own'>Egne</NavbarItem>
             </NavbarContent>
             <NavbarContent justify='end'>
                 <Button as={Link} href='/auth/login' variant='bordered' className='text-white'>Login</Button>
