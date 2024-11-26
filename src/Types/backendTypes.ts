@@ -34,6 +34,19 @@ export type RabbitProfileDTO = {
     }
 };
 
+export type Rabbit_UpdateDTO = {
+    "nickName": string,
+    "race": string,
+    "color": string,
+    "dateOfBirth": Date,
+    "dateOfDeath": Date,
+    "gender": string,
+    "forSale": string,
+    "forBreeding": string,
+    "fatherId_Placeholder": string,
+    "motherId_Placeholder": string,
+};
+
 export type Rabbit_ChildPreviewDTO = {
     "$id": number,
     "earCombId": string,
@@ -43,8 +56,6 @@ export type Rabbit_ChildPreviewDTO = {
     "gender": string,
     "otherParentId": string,
 };
-
-
 
 export type RabbitResponse = {
     "$id": number,
