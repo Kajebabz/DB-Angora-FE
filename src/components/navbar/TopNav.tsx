@@ -21,8 +21,8 @@ export default function TopNav() {
             <NavbarBrand as={Link} href='/'>
                 <GiRabbit size={40} className='text-blue-700 mr-2'/>
                 <div className='font-bold text-3xl flex'>
-                    <span className='text-blue-700 mr-2'>Blå</span>
-                    <span className='text-blue-700'>Kanin</span>
+                    <span className='text-blue-700 mr-2'>DenBlå</span>
+                    <span className='text-blue-700'>Angora</span>
                 </div>
             </NavbarBrand>
             <NavbarContent justify='center'>
