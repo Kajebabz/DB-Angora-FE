@@ -1,5 +1,4 @@
-export type Rabbit = {
-    "$id": number,
+export type Rabbit_PreviewDTO = {
     "earCombId": string,
     "nickName": string,
     "race": string,
@@ -9,8 +8,7 @@ export type Rabbit = {
     "userOrigin": string
 };
 
-export type RabbitProfileDTO = {
-    "$id": number,
+export type Rabbit_ProfileDTO = {
     "earCombId": string,
     "nickName": string,
     "originId": string,
@@ -28,10 +26,7 @@ export type RabbitProfileDTO = {
     "father_EarCombId": string,
     "motherId_Placeholder": string,
     "mother_EarCombId": string,
-    "children": {
-        "$id": number,
-        "$values": Rabbit_ChildPreviewDTO[]
-    }
+    "children": Rabbit_ChildPreviewDTO[]
 };
 
 export type Rabbit_UpdateDTO = {
@@ -48,7 +43,6 @@ export type Rabbit_UpdateDTO = {
 };
 
 export type Rabbit_ChildPreviewDTO = {
-    "$id": number,
     "earCombId": string,
     "dateOfBirth": Date,
     "nickName": string,
@@ -57,19 +51,12 @@ export type Rabbit_ChildPreviewDTO = {
     "otherParentId": string,
 };
 
-export type RabbitResponse = {
-    "$id": number,
-    "$values": Rabbit[]
-};
+export type Rabbits_PreviewList = Rabbit_PreviewDTO[];
 
 export type LoginResponse = {
-    "$id": number,
     "userName": string,
     "accessToken": string,
     "expiryDate": Date,
     "refreshToken": string,
-    "errors": {
-        "$id": number,
-        "$values": []
-    }
+    "errors": string[]
 };

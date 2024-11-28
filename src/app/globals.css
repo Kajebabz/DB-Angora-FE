@@ -7,16 +7,26 @@
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 @layer components {
   .vertical-center {
     height: calc(100vh - 64px);
+  }
+}
+
+@layer components {
+  .rabbit-card-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4;
+  }
+  
+  .rabbit-card {
+    @apply max-w-sm hover:shadow-lg transition-shadow;
   }
 }
 

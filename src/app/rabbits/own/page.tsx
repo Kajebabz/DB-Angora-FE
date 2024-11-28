@@ -1,22 +1,16 @@
+// app/rabbits/page.tsx (server component)
 import { GetOwnRabbits } from '@/services/AngoraDbService';
-import { Rabbit } from '@/types/backendTypes';
 import { cookies } from 'next/headers';
-import React from 'react'
+import RabbitList from './rabbitList';
 
-export default async function page() {
+export default async function RabbitsPage() {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken");
     const ownRabbits = await GetOwnRabbits(String(accessToken?.value));
+    
+    if (!ownRabbits || ownRabbits.length === 0) {
+        return <div>No rabbits found</div>;
+    }
 
-    return (
-        <div>
-            <ul>
-                {ownRabbits.$values.map((rabbit: Rabbit) => (
-                    <li key={JSON.stringify(rabbit)}>
-                        {JSON.stringify(rabbit)}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    )
+    return <RabbitList rabbits={ownRabbits} />; // Send array direkte
 }

@@ -1,13 +1,13 @@
 // rabbitProfile.tsx
 "use client"
 import { useState } from 'react';
-import { RabbitProfileDTO, Rabbit_UpdateDTO, Rabbit_ChildPreviewDTO } from "@/types/backendTypes";
+import { Rabbit_ProfileDTO, Rabbit_UpdateDTO, Rabbit_ChildPreviewDTO } from "@/types/backendTypes";
 import { Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Input } from "@nextui-org/react";
 import { EditRabbit } from "@/services/AngoraDbService";
 import { toast } from "react-toastify";
 
 type Props = {
-    rabbitProfile: RabbitProfileDTO;
+    rabbitProfile: Rabbit_ProfileDTO;
 };
 
 export default function RabbitProfile({ rabbitProfile }: Props) {
@@ -26,7 +26,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
         motherId_Placeholder: rabbitProfile.motherId_Placeholder,
     });
 
-    const propertyLabels: Record<keyof Omit<RabbitProfileDTO, "$id" | "children">, string> = {
+    const propertyLabels: Record<keyof Omit<Rabbit_ProfileDTO, "$id" | "children">, string> = {
         earCombId: "Øremærke ID",
         nickName: "Navn",
         originId: "Oprindelse ID",
@@ -74,7 +74,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
         }
     };
 
-    const renderCell = (key: keyof RabbitProfileDTO, value: unknown) => {
+    const renderCell = (key: keyof Rabbit_ProfileDTO, value: unknown) => {
         // For display mode
         if (!isEditing || !Object.keys(editedData).includes(key)) {
             if (key.includes('date')) {
@@ -177,12 +177,12 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                                 <TableRow key={key}>
                                     <TableCell>{label}</TableCell>
                                     <TableCell>
-                                        {renderCell(key as keyof RabbitProfileDTO,
+                                        {renderCell(key as keyof Rabbit_ProfileDTO,
                                             key.includes('date')
-                                                ? new Date(rabbitProfile[key as keyof RabbitProfileDTO] as Date).toLocaleDateString()
+                                                ? new Date(rabbitProfile[key as keyof Rabbit_ProfileDTO] as Date).toLocaleDateString()
                                                 : key === 'approvedRaceColorCombination' || key === 'isJuvenile'
-                                                    ? (rabbitProfile[key as keyof RabbitProfileDTO] ? 'Ja' : 'Nej')
-                                                    : String(rabbitProfile[key as keyof RabbitProfileDTO])
+                                                    ? (rabbitProfile[key as keyof Rabbit_ProfileDTO] ? 'Ja' : 'Nej')
+                                                    : String(rabbitProfile[key as keyof Rabbit_ProfileDTO])
                                         )}
                                     </TableCell>
                                 </TableRow>
@@ -202,7 +202,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                             <TableColumn>FØDSELSDATO</TableColumn>
                         </TableHeader>
                         <TableBody>
-                            {rabbitProfile.children.$values.map((child: Rabbit_ChildPreviewDTO) => (
+                            {rabbitProfile.children.map((child: Rabbit_ChildPreviewDTO) => (
                                 <TableRow key={child.earCombId}>
                                     <TableCell>{child.earCombId}</TableCell>
                                     <TableCell>{child.otherParentId}</TableCell>

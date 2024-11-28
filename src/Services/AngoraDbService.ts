@@ -1,4 +1,4 @@
-import { LoginResponse, Rabbit_UpdateDTO, RabbitProfileDTO, RabbitResponse } from "@/types/backendTypes";
+import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList } from "@/types/backendTypes";
 
 
 
@@ -10,27 +10,25 @@ export async function GetRaces(): Promise<string[]> {
     return races;
 }
 
-export async function GetOwnRabbits(accessToken: string): Promise<RabbitResponse> {
-
+export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
     const data = await fetch('https://db-angora.azurewebsites.net/api/Account/Rabbits_Owned', {
         headers: { Authorization: `Bearer ${accessToken}` }
     });
     const ownRabbits = await data.json();
-
+    //console.log('API Response:', ownRabbits); // Debug log
     return ownRabbits;
 }
 
-export async function GetRabbitProfile(accessToken: string): Promise<RabbitProfileDTO> {
-
-    const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Profile/4977-315', {
+export async function GetRabbitProfile(accessToken: string, earCombId: string): Promise<Rabbit_ProfileDTO> {
+    const data = await fetch(`https://db-angora.azurewebsites.net/api/Rabbit/Profile/${earCombId}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
     });
     const rabbitProfile = await data.json();
-
+    console.log('API Response:', rabbitProfile); // Debug log
     return rabbitProfile;
 }
 
-export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO, accessToken: string): Promise<RabbitProfileDTO> {
+export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO, accessToken: string): Promise<Rabbit_ProfileDTO> {
     const formattedData = {
         ...rabbitData,
         // Ensure dates are in YYYY-MM-DD format
@@ -75,7 +73,7 @@ export async function Login(userName: string, password: string, rememberMe: bool
     return ownRabbits;
 }
 
-export async function GetRabbitsForSale(): Promise<RabbitResponse> {
+export async function GetRabbitsForSale(): Promise<Rabbits_PreviewList> {
 
     const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Forsale', {
     });
