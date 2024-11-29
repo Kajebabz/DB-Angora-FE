@@ -31,8 +31,8 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
     const propertyLabels: Record<keyof Omit<Rabbit_ProfileDTO, "father_EarCombId" | "mother_EarCombId" | "children">, string> = {
         earCombId: "Øremærke ID",
         nickName: "Navn",
-        originId: "Oprdrætter ID",
-        ownerId: "Ejer ID",
+        originFullName: "Oprdrætter",
+        ownerFullName: "Ejer",
         race: "Race",
         color: "Farve",
         approvedRaceColorCombination: "Godkendt race/farve kombination",

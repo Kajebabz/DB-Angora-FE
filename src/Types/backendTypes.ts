@@ -12,8 +12,8 @@ export type Rabbit_PreviewDTO = {
 export type Rabbit_ProfileDTO = {
     "earCombId": string,
     "nickName": string | null,
-    "originId": string | null,
-    "ownerId": string | null,
+    "originFullName": string | null,
+    "ownerFullName": string | null,
     "race": string | null,
     "color": string | null,
     "approvedRaceColorCombination": boolean | null,

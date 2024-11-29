@@ -2,15 +2,6 @@
 import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList } from "@/types/backendTypes";
 
 
-
-// ENUM
-export async function GetRaces(): Promise<string[]> {
-    const data = await fetch('https://db-angora.azurewebsites.net/api/Enum/Races');
-    const races = await data.json();
-
-    return races;
-}
-
 export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
     const data = await fetch('https://db-angora.azurewebsites.net/api/Account/Rabbits_Owned', {
         headers: { Authorization: `Bearer ${accessToken}` }
@@ -20,12 +11,30 @@ export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_Previe
     return ownRabbits;
 }
 
+export async function GetRabbitsForSale(): Promise<Rabbits_PreviewList> {
+
+    const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Forsale', {
+    });
+    const rabbitsForSale = await data.json();
+
+    return rabbitsForSale;
+}
+
+export async function GetRabbitsForBreeding(): Promise<Rabbits_PreviewList> {
+
+    const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Forbreeding', {
+    });
+    const rabbitsForBreeding = await data.json();
+
+    return rabbitsForBreeding;
+}
+
 export async function GetRabbitProfile(accessToken: string, earCombId: string): Promise<Rabbit_ProfileDTO> {
     const data = await fetch(`https://db-angora.azurewebsites.net/api/Rabbit/Profile/${earCombId}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
     });
     const rabbitProfile = await data.json();
-    console.log('API Response:', rabbitProfile); // Debug log
+    //console.log('API Response:', rabbitProfile); // Debug log
     return rabbitProfile;
 }
 
@@ -72,13 +81,4 @@ export async function Login(userName: string, password: string, rememberMe: bool
     const ownRabbits = await data.json();
 
     return ownRabbits;
-}
-
-export async function GetRabbitsForSale(): Promise<Rabbits_PreviewList> {
-
-    const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Forsale', {
-    });
-    const rabbitsForSale = await data.json();
-
-    return rabbitsForSale;
 }
