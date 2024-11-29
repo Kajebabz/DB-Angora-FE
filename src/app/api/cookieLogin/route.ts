@@ -3,27 +3,28 @@ import { Login } from "@/services/AngoraDbService";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  try {
-      const data = await request.json();
-      const { userName, password } = data;
+    try {
+        const data = await request.json();
+        const { userName, password } = data;
 
-      const login = await Login(userName, password, false);
-      
-      if (!login.accessToken) {
-          return NextResponse.json({ error: 'Login failed' }, { status: 401 });
-      }
+        const login = await Login(userName, password, false);
 
-      // Sæt cookie
-      const response = NextResponse.json({ success: true }, { status: 200 });
-      response.cookies.set('accessToken', login.accessToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax'
-      });
+        if (!login.accessToken) {
+            return NextResponse.json({ error: 'Login failed' }, { status: 401 });
+        }
 
-      return response;
-  } catch (error) {
-      console.error('Login error:', error);
-      return NextResponse.json({ error: 'Login failed' }, { status: 500 });
-  }
+        // Sæt cookie
+        const response = NextResponse.json({ success: true }, { status: 200 });
+        response.cookies.set('accessToken', login.accessToken,
+            {
+                httpOnly: true,  // Forhindrer JavaScript adgang
+                secure: process.env.NODE_ENV === 'production',  // HTTPS only i prod
+                sameSite: 'lax'  // CSRF beskyttelse
+            });
+
+        return response;
+    } catch (error) {
+        console.error('Login error:', error);
+        return NextResponse.json({ error: 'Login failed' }, { status: 500 });
+    }
 }

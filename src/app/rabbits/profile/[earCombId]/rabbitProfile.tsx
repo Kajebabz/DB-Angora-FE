@@ -1,10 +1,12 @@
-// rabbitProfile.tsx
+// src/app/rabbits/profile/[earCombId]/rabbitProfile.tsx
 "use client"
 import { useState } from 'react';
 import { Rabbit_ProfileDTO, Rabbit_UpdateDTO, Rabbit_ChildPreviewDTO } from "@/types/backendTypes";
-import { Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Input } from "@nextui-org/react";
+import { Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Input, Switch } from "@nextui-org/react";
 import { EditRabbit } from "@/services/AngoraDbService";
 import { toast } from "react-toastify";
+import EnumSelect from '@/components/shared/enumSelect';
+
 
 type Props = {
     rabbitProfile: Rabbit_ProfileDTO;
@@ -26,40 +28,40 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
         motherId_Placeholder: rabbitProfile.motherId_Placeholder,
     });
 
-    const propertyLabels: Record<keyof Omit<Rabbit_ProfileDTO, "$id" | "children">, string> = {
+    const propertyLabels: Record<keyof Omit<Rabbit_ProfileDTO, "father_EarCombId" | "mother_EarCombId" | "children">, string> = {
         earCombId: "Øremærke ID",
         nickName: "Navn",
-        originId: "Oprindelse ID",
+        originId: "Oprdrætter ID",
         ownerId: "Ejer ID",
         race: "Race",
         color: "Farve",
-        approvedRaceColorCombination: "Godkendt Race/Farve Kombination",
+        approvedRaceColorCombination: "Godkendt race/farve kombination",
         dateOfBirth: "Fødselsdato",
         dateOfDeath: "Dødsdato",
         isJuvenile: "Ungdyr",
         gender: "Køn",
-        forSale: "Til Salg",
-        forBreeding: "Til Avl",
-        fatherId_Placeholder: "Far ID",
-        father_EarCombId: "Far Øremærke",
-        motherId_Placeholder: "Mor ID",
-        mother_EarCombId: "Mor Øremærke"
+        forSale: "Til salg",
+        forBreeding: "Til avl",
+        fatherId_Placeholder: "Far øremærke",     // User-editable field
+        //father_EarCombId: "System Reference",     // Hidden system field
+        motherId_Placeholder: "Mor øremærke",     // User-editable field
+        //mother_EarCombId: "System Reference"      // Hidden system field
     };
 
     const handleSave = async () => {
         try {
             setIsSaving(true);
-            const response = await fetch('/api/token');  // Updated path
+            const response = await fetch('/api/token');
             if (!response.ok) {
                 throw new Error('Failed to get token');
             }
-            
+
             const { accessToken } = await response.json();
             if (!accessToken) {
                 toast.error('Du er ikke logget ind');
                 return;
             }
-    
+
             const result = await EditRabbit(rabbitProfile.earCombId, editedData, accessToken);
             if (result) {
                 setIsEditing(false);
@@ -74,93 +76,147 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
         }
     };
 
+    const renderParentCell = (placeholder: string | null, matchingId: string | null) => {
+        if (!placeholder) return '-';
+
+        return (
+            <div className="flex items-center gap-2">
+                <span>{placeholder}</span>
+                {matchingId ? (
+                    <div className="flex items-center text-success">
+                        <span className="text-sm">✓ findes i systemet</span>
+                    </div>
+                ) : (
+                    <div className="flex items-center text-warning">
+                        <span className="text-sm">⚠ ikke oprettet i systemet</span>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
+    // Update renderCell to handle both display and edit modes for parent fields
     const renderCell = (key: keyof Rabbit_ProfileDTO, value: unknown) => {
-        // For display mode
+        // Skip rendering system IDs
+        if (key === 'father_EarCombId' || key === 'mother_EarCombId') {
+            return null;
+        }
+
+        // Display mode
         if (!isEditing || !Object.keys(editedData).includes(key)) {
-            if (key.includes('date')) {
-                // Check if date string matches format "DD.MM.YYYY" or "YYYY-MM-DD"
-                if (typeof value === 'string') {
-                    // Try to parse the date string
-                    const date = value.includes('.')
-                        ? value.split('.').reverse().join('-') // Convert DD.MM.YYYY to YYYY-MM-DD
-                        : value;
-                    
-                    const parsedDate = new Date(date);
-                    return parsedDate instanceof Date && !isNaN(parsedDate.getTime())
-                        ? parsedDate.toLocaleDateString('da-DK') // Danish format
-                        : '-';
-                }
-                return '-';
+            if (key === 'fatherId_Placeholder' || key === 'motherId_Placeholder') {
+                return renderParentCell(
+                    value as string,
+                    key === 'fatherId_Placeholder' ? rabbitProfile.father_EarCombId : rabbitProfile.mother_EarCombId
+                );
             }
-            
             if (typeof value === 'boolean') {
                 return value ? 'Ja' : 'Nej';
             }
-            
             return String(value ?? '-');
         }
-    
-        // For edit mode
-        if (key.includes('date')) {
-            let dateValue = '';
-            if (value) {
-                const date = new Date(value as string);
-                if (date instanceof Date && !isNaN(date.getTime())) {
-                    dateValue = date.toISOString().split('T')[0];
-                }
-            }
-    
+
+        if (key === 'race') {
             return (
-                <Input
-                    type="date"
-                    value={dateValue}
-                    onChange={(e) => setEditedData({
-                        ...editedData,
-                        [key]: e.target.value
-                    })}
+                <EnumSelect
+                    enumType="Race"
+                    value={editedData.race}
+                    onChange={(value) => setEditedData({...editedData, race: value})}
+                    label="Race"
                 />
             );
         }
 
-        <Button
-            color="primary"
-            onClick={handleSave}
-            isLoading={isSaving}
-            disabled={isSaving}
-        >
-            Gem
-        </Button>
-    
+        if (key === 'color') {
+            return (
+                <EnumSelect
+                    enumType="Color"
+                    value={editedData.color}
+                    onChange={(value) => setEditedData({...editedData, color: value})}
+                    label="Color"
+                />
+            );
+        }
+
+        if (key === 'gender') {
+            return (
+                <EnumSelect
+                    enumType="Gender"
+                    value={editedData.gender}
+                    onChange={(value) => setEditedData({...editedData, gender: value})}
+                    label="Gender"
+                />
+            );
+        }
+
+        if (key === 'forSale') {
+            return (
+                <Switch 
+                    isSelected={editedData.forSale === "Ja"}
+                    onValueChange={(checked) => setEditedData({
+                        ...editedData, 
+                        forSale: checked ? "Ja" : "Nej"
+                    })}
+                    aria-label="Til salg"
+                >
+                    {editedData.forSale === "Ja" ? "Til salg" : "Ikke til salg"}
+                </Switch>
+            );
+        }
+        
+        if (key === 'forBreeding') {
+            return (
+                <Switch 
+                    isSelected={editedData.forBreeding === "Ja"}
+                    onValueChange={(checked) => setEditedData({
+                        ...editedData, 
+                        forBreeding: checked ? "Ja" : "Nej"
+                    })}
+                    aria-label="Til avl"
+                >
+                    {editedData.forBreeding === "Ja" ? "Til avl" : "Ikke til avl"}
+                </Switch>
+            );
+        }
+
+        // Edit mode - handle all fields including parent IDs
         return (
             <Input
-                value={String(editedData[key as keyof Rabbit_UpdateDTO] ?? '')}
+                type="text"
+                value={String(editedData[key] ?? '')}
                 onChange={(e) => setEditedData({
                     ...editedData,
                     [key]: e.target.value
                 })}
+                aria-label={propertyLabels[key]}
             />
         );
     };
 
-    // <Button
-    //         color="primary"
-    //         onClick={handleSave}
-    //         isLoading={isSaving}
-    //         disabled={isSaving}
-    //     >
-    //         Gem
-    //     </Button>
-    
+
     return (
         <div className="w-full max-w-5xl mx-auto p-4">
             <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">Kanin Profil: {rabbitProfile.nickName}</h1>
+                <h1 className="text-2xl font-bold">{rabbitProfile.nickName}</h1>
                 {!isEditing ? (
                     <Button onClick={() => setIsEditing(true)}>Rediger</Button>
                 ) : (
                     <div className="space-x-2">
-                        <Button color="primary" onClick={handleSave}>Gem</Button>
-                        <Button color="danger" onClick={() => setIsEditing(false)}>Annuller</Button>
+                        <Button
+                            color="primary"
+                            onClick={handleSave}
+                            isLoading={isSaving}  // Use loading state
+                            disabled={isSaving}   // Prevent double-submit
+                        >
+                            {isSaving ? 'Gemmer...' : 'Gem'}
+                        </Button>
+                        <Button
+                            color="danger"
+                            onClick={() => setIsEditing(false)}
+                            disabled={isSaving}
+                        >
+                            Annuller
+                        </Button>
                     </div>
                 )}
             </div>
@@ -177,12 +233,9 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                                 <TableRow key={key}>
                                     <TableCell>{label}</TableCell>
                                     <TableCell>
-                                        {renderCell(key as keyof Rabbit_ProfileDTO,
-                                            key.includes('date')
-                                                ? new Date(rabbitProfile[key as keyof Rabbit_ProfileDTO] as Date).toLocaleDateString()
-                                                : key === 'approvedRaceColorCombination' || key === 'isJuvenile'
-                                                    ? (rabbitProfile[key as keyof Rabbit_ProfileDTO] ? 'Ja' : 'Nej')
-                                                    : String(rabbitProfile[key as keyof Rabbit_ProfileDTO])
+                                        {renderCell(
+                                            key as keyof Rabbit_ProfileDTO,
+                                            rabbitProfile[key as keyof Rabbit_ProfileDTO]
                                         )}
                                     </TableCell>
                                 </TableRow>
@@ -209,7 +262,9 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                                     <TableCell>{child.nickName}</TableCell>
                                     <TableCell>{child.gender}</TableCell>
                                     <TableCell>{child.color}</TableCell>
-                                    <TableCell>{new Date(child.dateOfBirth).toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                        {child.dateOfBirth ? new Date(child.dateOfBirth).toLocaleDateString('da-DK') : '-'}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
