@@ -1,5 +1,6 @@
 // src>services>AngoraDbService.ts
 import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList } from "@/types/backendTypes";
+import { ForSaleFilters } from "@/types/filterTypes";
 
 
 export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
@@ -11,13 +12,28 @@ export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_Previe
     return ownRabbits;
 }
 
-export async function GetRabbitsForSale(): Promise<Rabbits_PreviewList> {
+export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbits_PreviewList> {
+    const queryParams = new URLSearchParams();
+    
+    if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+            // Only add non-empty values to query
+            if (value !== undefined && value !== '' && value !== null) {
+                if (typeof value === 'boolean') {
+                    queryParams.append(key, value.toString());
+                } else if (typeof value === 'string' && value.trim() !== '') {
+                    queryParams.append(key, value.trim());
+                }
+            }
+        });
+    }
 
-    const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Forsale', {
-    });
-    const rabbitsForSale = await data.json();
-
-    return rabbitsForSale;
+    const queryString = queryParams.toString();
+    const url = `https://db-angora.azurewebsites.net/api/Rabbit/Forsale${queryString ? `?${queryString}` : ''}`;
+    
+    console.log('Fetching URL:', url); // Debug log
+    const data = await fetch(url);
+    return data.json();
 }
 
 export async function GetRabbitsForBreeding(): Promise<Rabbits_PreviewList> {
