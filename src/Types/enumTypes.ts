@@ -9,8 +9,8 @@ export interface EnumEndpoints {
 }
 
 export const ENUM_ENDPOINTS: EnumEndpoints = {
-    Race: 'https://db-angora.azurewebsites.net/api/Enum/Races',
-    Color: 'https://db-angora.azurewebsites.net/api/Enum/Colors',
-    Gender: 'https://db-angora.azurewebsites.net/api/Enum/Genders',
-    IsPublic: 'https://db-angora.azurewebsites.net/api/Enum/IsPublic'
+    Race: 'https://db-angora.dk/api/Enum/Races',
+    Color: 'https://db-angora.dk/api/Enum/Colors',
+    Gender: 'https://db-angora.dk/api/Enum/Genders',
+    IsPublic: 'https://db-angora.dk/api/Enum/IsPublic'
 };
