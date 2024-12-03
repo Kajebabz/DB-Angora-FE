@@ -4,7 +4,7 @@ import { ForSaleFilters } from "@/types/filterTypes";
 
 
 export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
-    const data = await fetch('https://db-angora.azurewebsites.net/api/Account/Rabbits_Owned', {
+    const data = await fetch('https://db-angora.dk/api/Account/Rabbits_Owned', {
         headers: { Authorization: `Bearer ${accessToken}` }
     });
     const ownRabbits = await data.json();
@@ -29,7 +29,7 @@ export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbi
     }
 
     const queryString = queryParams.toString();
-    const url = `https://db-angora.azurewebsites.net/api/Rabbit/Forsale${queryString ? `?${queryString}` : ''}`;
+    const url = `https://db-angora.dk/api/Rabbit/Forsale${queryString ? `?${queryString}` : ''}`;
     
     console.log('Fetching URL:', url); // Debug log
     const data = await fetch(url);
@@ -38,7 +38,7 @@ export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbi
 
 export async function GetRabbitsForBreeding(): Promise<Rabbits_PreviewList> {
 
-    const data = await fetch('https://db-angora.azurewebsites.net/api/Rabbit/Forbreeding', {
+    const data = await fetch('https://db-angora.dk/api/Rabbit/Forbreeding', {
     });
     const rabbitsForBreeding = await data.json();
 
@@ -46,7 +46,7 @@ export async function GetRabbitsForBreeding(): Promise<Rabbits_PreviewList> {
 }
 
 export async function GetRabbitProfile(accessToken: string, earCombId: string): Promise<Rabbit_ProfileDTO> {
-    const data = await fetch(`https://db-angora.azurewebsites.net/api/Rabbit/Profile/${earCombId}`, {
+    const data = await fetch(`https://db-angora.dk/api/Rabbit/Profile/${earCombId}`, {
         headers: { Authorization: `Bearer ${accessToken}` }
     });
     const rabbitProfile = await data.json();
@@ -62,7 +62,7 @@ export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO
         dateOfDeath: rabbitData.dateOfDeath || null
     };
 
-    const response = await fetch(`https://db-angora.azurewebsites.net/api/Rabbit/Update/${earCombId}`, {
+    const response = await fetch(`https://db-angora.dk/api/Rabbit/Update/${earCombId}`, {
         method: 'PUT',
         headers: { 
             'Authorization': `Bearer ${accessToken}`,
@@ -87,7 +87,7 @@ export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO
 }
 
 export async function Login(userName: string, password: string, rememberMe: boolean): Promise<LoginResponse> {
-    const data = await fetch('https://db-angora.azurewebsites.net/api/Auth/Login', {
+    const data = await fetch('https://db-angora.dk/api/Auth/Login', {
         method: "POST",
         body: JSON.stringify({ userName, password, rememberMe }),
         headers: {
