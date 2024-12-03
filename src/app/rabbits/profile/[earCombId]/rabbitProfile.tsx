@@ -5,7 +5,7 @@ import { Rabbit_ProfileDTO, Rabbit_UpdateDTO, Rabbit_ChildPreviewDTO } from "@/t
 import { Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Input, Switch } from "@nextui-org/react";
 import { EditRabbit } from "@/services/AngoraDbService";
 import { toast } from "react-toastify";
-import EnumSelect from '@/components/shared/enumSelect';
+import EnumAutocomplete from '@/components/shared/enumAutocomplete';
 
 
 type Props = {
@@ -118,7 +118,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
 
         if (key === 'race') {
             return (
-                <EnumSelect
+                <EnumAutocomplete
                     enumType="Race"
                     value={editedData.race}
                     onChange={(value) => setEditedData({...editedData, race: value})}
@@ -129,7 +129,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
 
         if (key === 'color') {
             return (
-                <EnumSelect
+                <EnumAutocomplete
                     enumType="Color"
                     value={editedData.color}
                     onChange={(value) => setEditedData({...editedData, color: value})}
@@ -140,7 +140,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
 
         if (key === 'gender') {
             return (
-                <EnumSelect
+                <EnumAutocomplete
                     enumType="Gender"
                     value={editedData.gender}
                     onChange={(value) => setEditedData({...editedData, gender: value})}

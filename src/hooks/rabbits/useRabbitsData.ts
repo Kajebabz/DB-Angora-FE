@@ -1,4 +1,4 @@
-// hooks/rabbits/useRabbitsForSale.ts
+// src/hooks/rabbits/useRabbitsForSale.ts
 import { useState, useEffect } from 'react';
 import { GetRabbitsForSale } from '@/services/AngoraDbService';
 import { ForSaleFilters } from '@/types/filterTypes';

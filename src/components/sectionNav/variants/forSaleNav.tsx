@@ -3,9 +3,9 @@
 import { Input, Button, Switch } from "@nextui-org/react";
 import { ForSaleFilters } from "@/types/filterTypes";
 import SectionNav from '../base/sectionNav';
-import EnumSelect from '@/components/shared/enumSelect';
 import { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
+import EnumAutocomplete from '@/components/shared/enumAutocomplete'; // Fix import path
 
 interface Props {
     activeFilters: ForSaleFilters;
@@ -45,8 +45,8 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
     };
 
     return (
-        <SectionNav 
-            title="Kaniner til salg" 
+        <SectionNav
+            title="Kaniner til salg"
             actions={[{ label: "Søg", onClick: handleSearch, color: "primary" as const }]}
         >
             <div className="flex flex-wrap gap-4">
@@ -72,11 +72,12 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
                 </div>
 
                 <div className="flex items-center gap-2 min-w-[200px]">
-                    <EnumSelect
+                    <EnumAutocomplete
                         enumType="Race"
                         value={localFilters.race ?? null}
                         onChange={(value) => handleLocalFilter('race', value)}
                         label="Race"
+                        id="race-select"
                     />
                     {localFilters.race && (
                         <Button
@@ -91,7 +92,7 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
                 </div>
 
                 <div className="flex items-center gap-2 min-w-[200px]">
-                    <EnumSelect
+                    <EnumAutocomplete
                         enumType="Color"
                         value={localFilters.color ?? null}
                         onChange={(value) => handleLocalFilter('color', value)}
@@ -110,7 +111,7 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
                 </div>
 
                 <div className="flex items-center gap-2 min-w-[200px]">
-                    <EnumSelect
+                    <EnumAutocomplete
                         enumType="Gender"
                         value={localFilters.gender ?? null}
                         onChange={(value) => handleLocalFilter('gender', value)}
@@ -129,13 +130,18 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
                 </div>
 
                 <div className="flex items-center gap-2">
+                    {/* Fix Switch labeling */}
                     <Switch
-                        isSelected={localFilters.approvedRaceColorCombination}
-                        onValueChange={(checked) =>
-                            handleLocalFilter('approvedRaceColorCombination', checked ? 'true' : null)
-                        }
+                        id="approved-combination"
+                        aria-labelledby="approved-combination-label"
+                        isSelected={localFilters.approvedRaceColorCombination || false}
+                        onValueChange={(checked) => {
+                            handleLocalFilter('approvedRaceColorCombination', checked ? 'true' : null);
+                        }}
                     >
-                        Godkendt kombination
+                        <span id="approved-combination-label">
+                            Godkendt kombination
+                        </span>
                     </Switch>
                 </div>
             </div>

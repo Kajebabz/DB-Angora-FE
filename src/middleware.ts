@@ -1,3 +1,4 @@
+// src/middleware.ts
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -22,7 +23,12 @@ function isTokenExpired(token: string): boolean {
 }
 
 export const config = {
-  matcher: ['/rabbits/:path*']
+  matcher: [
+    // Include all rabbit routes except for-sale
+    '/rabbits/:path*',
+    // Exclude for-sale route
+    //'/((?!rabbits/for-sale).*)',
+  ]
 }
 
 /*

@@ -31,10 +31,11 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
           <TopNav />
-          {/* Remove container class, add left padding for sidebar */}
-          <main className="pl-72 pt-[64px]">
-            {children}
-          </main>
+          <div className="max-w-7xl mx-auto px-4">
+            <main className="pl-72 pt-[64px]">
+              {children}
+            </main>
+          </div>
         </Providers>
       </body>
     </html>

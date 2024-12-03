@@ -1,6 +1,6 @@
-// src/components/shared/enumSelect.tsx
+// src/components/shared/enumAutocomplete.tsx
 "use client"
-import { Select, SelectItem } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { useEffect, useState } from 'react';
 import { getEnumValues } from '@/services/enumService';
 import { RabbitEnum } from '@/types/enumTypes';
@@ -13,7 +13,7 @@ interface Props {
     id?: string;
 }
 
-export default function EnumSelect({ enumType, value, onChange, label, id }: Props) {
+export default function EnumAutocomplete({ enumType, value, onChange, label, id }: Props) {
     const [options, setOptions] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     
@@ -31,23 +31,21 @@ export default function EnumSelect({ enumType, value, onChange, label, id }: Pro
         loadOptions();
     }, [enumType]);
 
-    const selectId = id || `${enumType.toLowerCase()}-select`;
-
     return (
-        <Select
-            id={selectId}
+        <Autocomplete
+            id={id || `${enumType.toLowerCase()}-select`}
             label={label}
             labelPlacement="outside"
-            aria-label={`Vælg ${label.toLowerCase()}`}
-            selectedKeys={value ? [value] : []}
-            onChange={(e) => onChange(e.target.value)}
+            defaultSelectedKey={value || undefined}
+            onSelectionChange={(key) => onChange(key as string)}
+            className="max-w-xs"
             isLoading={isLoading}
         >
             {options.map((option) => (
-                <SelectItem key={option} value={option}>
+                <AutocompleteItem key={option} textValue={option}>
                     {option.replace(/_/g, ' ')}
-                </SelectItem>
+                </AutocompleteItem>
             ))}
-        </Select>
+        </Autocomplete>
     );
 }
