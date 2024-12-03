@@ -16,22 +16,27 @@ interface SectionNavProps {
 
 export default function SectionNav({ title, actions = [], children }: SectionNavProps) {
     return (
-        <nav className="w-full bg-default-100 p-4 mb-4">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">{title}</h2>
-                <div className="flex gap-2">
-                    {actions?.map((action, index) => (
-                        <Button 
-                            key={index}
-                            color={action.color || "primary"}
-                            onClick={action.onClick}
-                        >
-                            {action.label}
-                        </Button>
-                    ))}
+        <nav className="fixed left-0 top-[64px] h-[calc(100vh-64px)] w-72 bg-default-100 p-4 border-r border-divider overflow-y-auto">
+            <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                    <h2 className="text-2xl font-bold">{title}</h2>
+                    <div className="flex flex-col gap-2">
+                        {actions?.map((action, index) => (
+                            <Button 
+                                key={index}
+                                color={action.color || "primary"}
+                                onClick={action.onClick}
+                                className="w-full"
+                            >
+                                {action.label}
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+                <div className="flex flex-col gap-4">
+                    {children}
                 </div>
             </div>
-            {children}
         </nav>
     );
 }

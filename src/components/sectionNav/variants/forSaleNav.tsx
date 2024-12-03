@@ -1,34 +1,42 @@
-// src/components/sectionNav/variants/forSaleNav.tsx
+// components/sectionNav/variants/forSaleNav.tsx
 'use client';
-import { Input, Button } from "@nextui-org/react";
+import { Input, Button, Switch } from "@nextui-org/react";
 import { ForSaleFilters } from "@/types/filterTypes";
 import SectionNav from '../base/sectionNav';
 import EnumSelect from '@/components/shared/enumSelect';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
 
 interface Props {
-    activeFilters?: ForSaleFilters;
+    activeFilters: ForSaleFilters;
     onFilterChange: (filters: ForSaleFilters) => void;
 }
 
-export default function ForSaleNav({ activeFilters = {}, onFilterChange }: Props) {
+export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
     const [localFilters, setLocalFilters] = useState<ForSaleFilters>(activeFilters);
 
-    useEffect(() => {
-        setLocalFilters(activeFilters);
-    }, [activeFilters]);
-
     const handleLocalFilter = (key: keyof ForSaleFilters, value: string | null) => {
+        const newFilters = { ...localFilters };
         if (!value) {
-            const newFilters = { ...localFilters };
             delete newFilters[key];
-            setLocalFilters(newFilters);
         } else {
-            setLocalFilters(prev => ({ ...prev, [key]: value }));
+            switch (key) {
+                case 'isJuvenile':
+                case 'approvedRaceColorCombination':
+                    newFilters[key] = value === 'true';
+                    break;
+                case 'rightEarId':
+                case 'race':
+                case 'color':
+                case 'gender':
+                    newFilters[key] = value;
+                    break;
+            }
         }
+        setLocalFilters(newFilters);
     };
 
+    const handleSearch = () => onFilterChange(localFilters);
     const handleClear = (key: keyof ForSaleFilters) => {
         const newFilters = { ...localFilters };
         delete newFilters[key];
@@ -36,15 +44,14 @@ export default function ForSaleNav({ activeFilters = {}, onFilterChange }: Props
         onFilterChange(newFilters);
     };
 
-    const handleSearch = () => {
-        onFilterChange(localFilters);
-    };
-
     return (
-        <SectionNav title="Kaniner til salg" actions={[{ label: "Søg", onClick: handleSearch, color: "primary" as const }]}>
+        <SectionNav 
+            title="Kaniner til salg" 
+            actions={[{ label: "Søg", onClick: handleSearch, color: "primary" as const }]}
+        >
             <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2">
-                    <Input 
+                    <Input
                         placeholder="Søg ID..."
                         value={localFilters.rightEarId ?? ''}
                         onChange={(e) => handleLocalFilter('rightEarId', e.target.value || null)}
@@ -63,6 +70,7 @@ export default function ForSaleNav({ activeFilters = {}, onFilterChange }: Props
                         }
                     />
                 </div>
+
                 <div className="flex items-center gap-2 min-w-[200px]">
                     <EnumSelect
                         enumType="Race"
@@ -81,6 +89,26 @@ export default function ForSaleNav({ activeFilters = {}, onFilterChange }: Props
                         </Button>
                     )}
                 </div>
+
+                <div className="flex items-center gap-2 min-w-[200px]">
+                    <EnumSelect
+                        enumType="Color"
+                        value={localFilters.color ?? null}
+                        onChange={(value) => handleLocalFilter('color', value)}
+                        label="Farve"
+                    />
+                    {localFilters.color && (
+                        <Button
+                            isIconOnly
+                            size="sm"
+                            variant="light"
+                            onClick={() => handleClear('color')}
+                        >
+                            <IoMdClose />
+                        </Button>
+                    )}
+                </div>
+
                 <div className="flex items-center gap-2 min-w-[200px]">
                     <EnumSelect
                         enumType="Gender"
@@ -98,6 +126,17 @@ export default function ForSaleNav({ activeFilters = {}, onFilterChange }: Props
                             <IoMdClose />
                         </Button>
                     )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <Switch
+                        isSelected={localFilters.approvedRaceColorCombination}
+                        onValueChange={(checked) =>
+                            handleLocalFilter('approvedRaceColorCombination', checked ? 'true' : null)
+                        }
+                    >
+                        Godkendt kombination
+                    </Switch>
                 </div>
             </div>
         </SectionNav>
