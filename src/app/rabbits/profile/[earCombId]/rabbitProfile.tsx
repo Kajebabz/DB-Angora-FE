@@ -1,6 +1,7 @@
 // src/app/rabbits/profile/[earCombId]/rabbitProfile.tsx
 "use client"
 import { useState } from 'react';
+import RabbitProfileNav from '@/components/sectionNav/variants/rabbitProfileNav';
 import { Rabbit_ProfileDTO, Rabbit_UpdateDTO, Rabbit_ChildPreviewDTO } from "@/types/backendTypes";
 import { Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Input, Switch } from "@nextui-org/react";
 import { EditRabbit } from "@/services/AngoraDbService";
@@ -76,6 +77,16 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
         }
     };
 
+    const handleDelete = async () => {
+        // TODO: Implement when API is ready
+        toast.info('Slet funktionalitet kommer snart');
+    };
+
+    const handleChangeOwner = async () => {
+        // TODO: Implement when API is ready
+        toast.info('Skift ejer funktionalitet kommer snart');
+    };
+
     const renderParentCell = (placeholder: string | null, matchingId: string | null) => {
         if (!placeholder) return '-';
 
@@ -121,7 +132,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                 <EnumAutocomplete
                     enumType="Race"
                     value={editedData.race}
-                    onChange={(value) => setEditedData({...editedData, race: value})}
+                    onChange={(value) => setEditedData({ ...editedData, race: value })}
                     label="Race"
                 />
             );
@@ -132,7 +143,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                 <EnumAutocomplete
                     enumType="Color"
                     value={editedData.color}
-                    onChange={(value) => setEditedData({...editedData, color: value})}
+                    onChange={(value) => setEditedData({ ...editedData, color: value })}
                     label="Color"
                 />
             );
@@ -143,7 +154,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                 <EnumAutocomplete
                     enumType="Gender"
                     value={editedData.gender}
-                    onChange={(value) => setEditedData({...editedData, gender: value})}
+                    onChange={(value) => setEditedData({ ...editedData, gender: value })}
                     label="Gender"
                 />
             );
@@ -151,10 +162,10 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
 
         if (key === 'forSale') {
             return (
-                <Switch 
+                <Switch
                     isSelected={editedData.forSale === "Ja"}
                     onValueChange={(checked) => setEditedData({
-                        ...editedData, 
+                        ...editedData,
                         forSale: checked ? "Ja" : "Nej"
                     })}
                     aria-label="Til salg"
@@ -163,13 +174,13 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                 </Switch>
             );
         }
-        
+
         if (key === 'forBreeding') {
             return (
-                <Switch 
+                <Switch
                     isSelected={editedData.forBreeding === "Ja"}
                     onValueChange={(checked) => setEditedData({
-                        ...editedData, 
+                        ...editedData,
                         forBreeding: checked ? "Ja" : "Nej"
                     })}
                     aria-label="Til avl"
@@ -195,82 +206,89 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
 
 
     return (
-        <div className="w-full max-w-5xl mx-auto p-4">
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold">{rabbitProfile.nickName}</h1>
-                {!isEditing ? (
-                    <Button onClick={() => setIsEditing(true)}>Rediger</Button>
-                ) : (
-                    <div className="space-x-2">
-                        <Button
-                            color="primary"
-                            onClick={handleSave}
-                            isLoading={isSaving}  // Use loading state
-                            disabled={isSaving}   // Prevent double-submit
-                        >
-                            {isSaving ? 'Gemmer...' : 'Gem'}
-                        </Button>
-                        <Button
-                            color="danger"
-                            onClick={() => setIsEditing(false)}
-                            disabled={isSaving}
-                        >
-                            Annuller
-                        </Button>
-                    </div>
-                )}
+        <>
+            <RabbitProfileNav
+                rabbitName={rabbitProfile.nickName || rabbitProfile.earCombId}
+                onDelete={handleDelete}
+                onChangeOwner={handleChangeOwner}
+            />
+            <div className="w-full max-w-5xl mx-auto p-4">
+                <div className="flex justify-between items-center mb-4">
+                    <h1 className="text-2xl font-bold">{rabbitProfile.nickName}</h1>
+                    {!isEditing ? (
+                        <Button onClick={() => setIsEditing(true)}>Rediger</Button>
+                    ) : (
+                        <div className="space-x-2">
+                            <Button
+                                color="primary"
+                                onClick={handleSave}
+                                isLoading={isSaving}  // Use loading state
+                                disabled={isSaving}   // Prevent double-submit
+                            >
+                                {isSaving ? 'Gemmer...' : 'Gem'}
+                            </Button>
+                            <Button
+                                color="danger"
+                                onClick={() => setIsEditing(false)}
+                                disabled={isSaving}
+                            >
+                                Annuller
+                            </Button>
+                        </div>
+                    )}
+                </div>
+
+                <Tabs aria-label="Kanin information">
+                    <Tab key="details" title="Detaljer">
+                        <Table aria-label="Kanin detaljer">
+                            <TableHeader>
+                                <TableColumn>EGENSKAB</TableColumn>
+                                <TableColumn>VÆRDI</TableColumn>
+                            </TableHeader>
+                            <TableBody>
+                                {Object.entries(propertyLabels).map(([key, label]) => (
+                                    <TableRow key={key}>
+                                        <TableCell>{label}</TableCell>
+                                        <TableCell>
+                                            {renderCell(
+                                                key as keyof Rabbit_ProfileDTO,
+                                                rabbitProfile[key as keyof Rabbit_ProfileDTO]
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Tab>
+
+                    <Tab key="children" title="Afkom">
+                        <Table aria-label="Kanin afkom">
+                            <TableHeader>
+                                <TableColumn>ØREMÆRKE ID</TableColumn>
+                                <TableColumn>ANDEN FORÆLDER ID</TableColumn>
+                                <TableColumn>NAVN</TableColumn>
+                                <TableColumn>KØN</TableColumn>
+                                <TableColumn>FARVE</TableColumn>
+                                <TableColumn>FØDSELSDATO</TableColumn>
+                            </TableHeader>
+                            <TableBody>
+                                {rabbitProfile.children.map((child: Rabbit_ChildPreviewDTO) => (
+                                    <TableRow key={child.earCombId}>
+                                        <TableCell>{child.earCombId}</TableCell>
+                                        <TableCell>{child.otherParentId}</TableCell>
+                                        <TableCell>{child.nickName}</TableCell>
+                                        <TableCell>{child.gender}</TableCell>
+                                        <TableCell>{child.color}</TableCell>
+                                        <TableCell>
+                                            {child.dateOfBirth ? new Date(child.dateOfBirth).toLocaleDateString('da-DK') : '-'}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Tab>
+                </Tabs>
             </div>
-
-            <Tabs aria-label="Kanin information">
-                <Tab key="details" title="Detaljer">
-                    <Table aria-label="Kanin detaljer">
-                        <TableHeader>
-                            <TableColumn>EGENSKAB</TableColumn>
-                            <TableColumn>VÆRDI</TableColumn>
-                        </TableHeader>
-                        <TableBody>
-                            {Object.entries(propertyLabels).map(([key, label]) => (
-                                <TableRow key={key}>
-                                    <TableCell>{label}</TableCell>
-                                    <TableCell>
-                                        {renderCell(
-                                            key as keyof Rabbit_ProfileDTO,
-                                            rabbitProfile[key as keyof Rabbit_ProfileDTO]
-                                        )}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </Tab>
-
-                <Tab key="children" title="Afkom">
-                    <Table aria-label="Kanin afkom">
-                        <TableHeader>
-                            <TableColumn>ØREMÆRKE ID</TableColumn>
-                            <TableColumn>ANDEN FORÆLDER ID</TableColumn>
-                            <TableColumn>NAVN</TableColumn>
-                            <TableColumn>KØN</TableColumn>
-                            <TableColumn>FARVE</TableColumn>
-                            <TableColumn>FØDSELSDATO</TableColumn>
-                        </TableHeader>
-                        <TableBody>
-                            {rabbitProfile.children.map((child: Rabbit_ChildPreviewDTO) => (
-                                <TableRow key={child.earCombId}>
-                                    <TableCell>{child.earCombId}</TableCell>
-                                    <TableCell>{child.otherParentId}</TableCell>
-                                    <TableCell>{child.nickName}</TableCell>
-                                    <TableCell>{child.gender}</TableCell>
-                                    <TableCell>{child.color}</TableCell>
-                                    <TableCell>
-                                        {child.dateOfBirth ? new Date(child.dateOfBirth).toLocaleDateString('da-DK') : '-'}
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </Tab>
-            </Tabs>
-        </div>
+        </>
     );
 }

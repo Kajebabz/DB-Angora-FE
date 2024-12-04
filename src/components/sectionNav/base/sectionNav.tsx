@@ -3,7 +3,7 @@
 import { Button } from "@nextui-org/react";
 
 interface NavAction {
-    label: string;
+    label: string | JSX.Element;  // Allow both string and JSX
     onClick: () => void;
     color?: "primary" | "secondary" | "success" | "warning" | "danger";
 }
