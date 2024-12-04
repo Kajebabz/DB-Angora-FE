@@ -1,5 +1,5 @@
-// src>services>AngoraDbService.ts
-import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList } from "@/types/backendTypes";
+// src/services/AngoraDbService.ts
+import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO } from "@/types/backendTypes";
 import { ForSaleFilters } from "@/types/filterTypes";
 
 
@@ -83,6 +83,29 @@ export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO
         throw new Error(`Failed to update rabbit: ${response.status} ${response.statusText}`);
     }
     
+    return response.json();
+}
+
+export async function DeleteRabbit(earCombId: string, accessToken: string): Promise<Rabbit_PreviewDTO> {
+    const response = await fetch(`https://db-angora.dk/api/Rabbit/Delete/${earCombId}`, {
+        method: 'DELETE',
+        headers: { 
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'accept': 'text/plain'
+        }
+    });
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText
+        });
+        throw new Error(`Failed to delete rabbit: ${response.status} ${response.statusText}`);
+    }
+
     return response.json();
 }
 

@@ -1,16 +1,16 @@
-// app/rabbits/rabbitList.tsx
+// src/app/rabbits/own/rabbitList.tsx
 'use client';
 import { Rabbit_PreviewDTO } from '@/types/backendTypes';
 import { useRouter } from 'next/navigation';
 import RabbitCard from '@/components/cards/rabbitCard';
-import OwnNav from '@/components/sectionNav/variants/ownNav';
+import OwnNav from '@/components/sectionNav/variants/rabbitOwnNav';
 import { useOwnRabbits } from '@/hooks/rabbits/useOwnRabbits';
 
 type Props = {
     rabbits: Rabbit_PreviewDTO[];
 };
 
-export default function RabbitList({ rabbits }: Props) {
+export default function RabbitOwnList({ rabbits }: Props) {
     const router = useRouter();
     const { 
         filteredRabbits, 

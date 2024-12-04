@@ -6,6 +6,7 @@ interface NavAction {
     label: string | JSX.Element;  // Allow both string and JSX
     onClick: () => void;
     color?: "primary" | "secondary" | "success" | "warning" | "danger";
+    disabled?: boolean;
 }
 
 interface SectionNavProps {

@@ -4,9 +4,10 @@ import { useState } from 'react';
 import RabbitProfileNav from '@/components/sectionNav/variants/rabbitProfileNav';
 import { Rabbit_ProfileDTO, Rabbit_UpdateDTO, Rabbit_ChildPreviewDTO } from "@/types/backendTypes";
 import { Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Input, Switch } from "@nextui-org/react";
-import { EditRabbit } from "@/services/AngoraDbService";
+import { DeleteRabbit, EditRabbit } from "@/services/AngoraDbService";
 import { toast } from "react-toastify";
 import EnumAutocomplete from '@/components/shared/enumAutocomplete';
+import { useRouter } from 'next/navigation'; // Change from 'next/router'
 
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
 export default function RabbitProfile({ rabbitProfile }: Props) {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [editedData, setEditedData] = useState<Rabbit_UpdateDTO>({
         nickName: rabbitProfile.nickName,
         race: rabbitProfile.race,
@@ -77,9 +79,30 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
         }
     };
 
+    const router = useRouter();
     const handleDelete = async () => {
-        // TODO: Implement when API is ready
-        toast.info('Slet funktionalitet kommer snart');
+        try {
+            setIsDeleting(true);
+            const response = await fetch('/api/token');
+            if (!response.ok) {
+                throw new Error('Failed to get token');
+            }
+
+            const { accessToken } = await response.json();
+            if (!accessToken) {
+                toast.error('Du er ikke logget ind');
+                return;
+            }
+
+            await DeleteRabbit(rabbitProfile.earCombId, accessToken);
+            toast.success('Kaninen blev slettet');
+            router.push('/rabbits/own');
+        } catch (error) {
+            console.error('Delete failed:', error);
+            toast.error('Der skete en fejl ved sletning af kaninen');
+        } finally {
+            setIsDeleting(false);
+        }
     };
 
     const handleChangeOwner = async () => {
@@ -211,6 +234,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                 rabbitName={rabbitProfile.nickName || rabbitProfile.earCombId}
                 onDelete={handleDelete}
                 onChangeOwner={handleChangeOwner}
+                isDeleting={isDeleting}
             />
             <div className="w-full max-w-5xl mx-auto p-4">
                 <div className="flex justify-between items-center mb-4">
@@ -272,7 +296,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                                 <TableColumn>FØDSELSDATO</TableColumn>
                             </TableHeader>
                             <TableBody>
-                                {rabbitProfile.children.map((child: Rabbit_ChildPreviewDTO) => (
+                                {rabbitProfile.children?.map((child: Rabbit_ChildPreviewDTO) => (
                                     <TableRow key={child.earCombId}>
                                         <TableCell>{child.earCombId}</TableCell>
                                         <TableCell>{child.otherParentId}</TableCell>
@@ -283,7 +307,11 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                                             {child.dateOfBirth ? new Date(child.dateOfBirth).toLocaleDateString('da-DK') : '-'}
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )) ?? (
+                                        <TableRow>
+                                            <TableCell colSpan={6}>Ingen afkom registreret</TableCell>
+                                        </TableRow>
+                                    )}
                             </TableBody>
                         </Table>
                     </Tab>

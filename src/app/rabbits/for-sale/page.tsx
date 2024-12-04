@@ -3,7 +3,7 @@
 import RabbitCard from '@/components/cards/rabbitCard';
 import { useRouter } from 'next/navigation';
 import { useFilteredRabbits } from '@/hooks/rabbits/useRabbitFilters';
-import ForSaleNav from '@/components/sectionNav/variants/forSaleNav';
+import ForSaleNav from '@/components/sectionNav/variants/rabbitSaleNav';
 
 export default function ForSalePage() {
     const router = useRouter();

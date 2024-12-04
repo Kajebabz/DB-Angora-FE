@@ -7,9 +7,15 @@ interface Props {
     rabbitName: string;
     onDelete?: () => void;
     onChangeOwner?: () => void;
+    isDeleting?: boolean;  // Add this prop
 }
 
-export default function RabbitProfileNav({ rabbitName, onDelete, onChangeOwner }: Props) {
+export default function RabbitProfileNav({ 
+    rabbitName, 
+    onDelete, 
+    onChangeOwner,
+    isDeleting 
+}: Props) {
     return (
         <SectionNav 
             title={`Profil: ${rabbitName}`}
@@ -18,11 +24,12 @@ export default function RabbitProfileNav({ rabbitName, onDelete, onChangeOwner }
                     label: (
                         <>
                             <FaTrash className="mr-2" />
-                            Slet kanin
+                            {isDeleting ? 'Sletter...' : 'Slet kanin'}
                         </>
                     ), 
-                    onClick: () => onDelete?.(), 
-                    color: "danger" 
+                    onClick: () => onDelete?.(),
+                    color: "danger",
+                    disabled: isDeleting
                 },
                 { 
                     label: (
