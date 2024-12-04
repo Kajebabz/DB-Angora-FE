@@ -1,15 +1,15 @@
-// src/app/layout.tsx
+// src/app/layout.tsx (server component)
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Providers from "@/components/Providers";
-import TopNav from "@/components/navbar/TopNav";
+import LayoutWrapper from "./layoutWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -29,14 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-          <TopNav />
-          <div className="max-w-7xl mx-auto px-4">
-            <main className="pl-72 pt-[64px]">
-              {children}
-            </main>
-          </div>
-        </Providers>
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   );
