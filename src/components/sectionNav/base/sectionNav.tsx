@@ -4,6 +4,7 @@ import { Button } from "@nextui-org/react";
 
 interface NavAction {
     label: string | JSX.Element;  // Allow both string and JSX
+    className?: string;
     onClick: () => void;
     color?: "primary" | "secondary" | "success" | "warning" | "danger";
     disabled?: boolean;
@@ -25,11 +26,12 @@ export default function SectionNav({ title, actions = [], children }: SectionNav
                     <h2 className="text-2xl font-bold">{title}</h2>
                     <div className="flex flex-col gap-2">
                         {actions?.map((action, index) => (
-                            <Button 
+                            <Button
                                 key={index}
                                 color={action.color || "primary"}
                                 onClick={action.onClick}
-                                className="w-full"
+                                className={`w-full ${action.className || ''}`} // Kombiner classes
+                                disabled={action.disabled}
                             >
                                 {action.label}
                             </Button>

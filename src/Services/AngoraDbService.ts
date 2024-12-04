@@ -1,7 +1,31 @@
 // src/services/AngoraDbService.ts
-import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO } from "@/types/backendTypes";
+import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO, Rabbit_CreateDTO } from "@/types/backendTypes";
 import { ForSaleFilters } from "@/types/filterTypes";
 
+export async function CreateRabbit(rabbitData: Rabbit_CreateDTO, accessToken: string): Promise<Rabbit_ProfileDTO> {
+    const response = await fetch('https://db-angora.dk/api/Rabbit/Create', {
+        method: 'POST',
+        headers: { 
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'accept': 'text/plain'
+        },
+        body: JSON.stringify(rabbitData)
+    });
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText,
+            sentData: rabbitData
+        });
+        throw new Error(`Failed to create rabbit: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
+}
 
 export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
     const data = await fetch('https://db-angora.dk/api/Account/Rabbits_Owned', {

@@ -30,6 +30,21 @@ export type Rabbit_ProfileDTO = {
     "children": Rabbit_ChildPreviewDTO[]
 };
 
+export interface Rabbit_CreateDTO {
+    rightEarId: string;
+    leftEarId: string;
+    nickName: string;
+    race: string;
+    color: string;
+    dateOfBirth: string;
+    dateOfDeath?: string | null;
+    gender: string;
+    forSale: string;
+    forBreeding: string;
+    father_EarCombId?: string | null;
+    mother_EarCombId?: string | null;
+}
+
 export type Rabbit_UpdateDTO = {
     "nickName": string| null,
     "race": string| null,

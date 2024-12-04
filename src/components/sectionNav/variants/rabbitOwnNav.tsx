@@ -1,7 +1,9 @@
-// src/components/sectionNav/variants/ownNav.tsx
+// src/components/sectionNav/variants/rabbitOwnNav.tsx
 'use client';
 import { Input, Select, SelectItem } from "@nextui-org/react";
 import SectionNav from '../base/sectionNav';
+import { useRouter } from 'next/navigation';
+import { PiRabbitFill } from "react-icons/pi";
 
 interface Props {
     search: string;
@@ -11,18 +13,36 @@ interface Props {
 }
 
 export default function OwnNav({ search, filterGender, onSearchChange, onGenderChange }: Props) {
+    const router = useRouter();
+
     return (
-        <SectionNav title="Mine Kaniner">
+        <SectionNav
+            title="Mine Kaniner"
+            actions={[
+                {
+                    label: (
+                        <>
+                            <PiRabbitFill className="mr-2" />
+                            Opret kanin
+                        </>
+                    ),
+                    onClick: () => router.push('/rabbits/create'),
+                    color: "success",
+                    className: "text-white"
+                }
+            ]}
+        >
             <div className="flex flex-col gap-4">
                 <Input
-                    placeholder="Søg efter navn, øremærke eller race..."
                     value={search}
                     onChange={(e) => onSearchChange(e.target.value)}
+                    placeholder="Søg efter navn, øremærke eller race..."
+                    aria-label="Søg efter kaniner"
                 />
                 <Select
-                    placeholder="Filtrer efter køn"
-                    value={filterGender}
+                    selectedKeys={[filterGender]}
                     onChange={(e) => onGenderChange(e.target.value)}
+                    aria-label="Filtrer efter køn"
                 >
                     <SelectItem key="all" value="all">Alle</SelectItem>
                     <SelectItem key="Buck" value="Buck">Han</SelectItem>

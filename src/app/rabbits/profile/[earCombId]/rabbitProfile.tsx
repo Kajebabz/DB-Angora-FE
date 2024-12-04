@@ -1,35 +1,31 @@
 // src/app/rabbits/profile/[earCombId]/rabbitProfile.tsx
 "use client"
-import { useState } from 'react';
-import RabbitProfileNav from '@/components/sectionNav/variants/rabbitProfileNav';
-import { Rabbit_ProfileDTO, Rabbit_UpdateDTO, Rabbit_ChildPreviewDTO } from "@/types/backendTypes";
+import { Rabbit_ProfileDTO, Rabbit_ChildPreviewDTO } from "@/types/backendTypes";
 import { Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Input, Switch } from "@nextui-org/react";
-import { DeleteRabbit, EditRabbit } from "@/services/AngoraDbService";
-import { toast } from "react-toastify";
 import EnumAutocomplete from '@/components/shared/enumAutocomplete';
-import { useRouter } from 'next/navigation'; // Change from 'next/router'
-
+import RabbitProfileNav from '@/components/sectionNav/variants/rabbitProfileNav';
+import { useRabbitProfile } from '@/hooks/rabbits/useRabbitProfile';
+import { toast } from "react-toastify";
 
 type Props = {
     rabbitProfile: Rabbit_ProfileDTO;
 };
 
 export default function RabbitProfile({ rabbitProfile }: Props) {
-    const [isEditing, setIsEditing] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [editedData, setEditedData] = useState<Rabbit_UpdateDTO>({
-        nickName: rabbitProfile.nickName,
-        race: rabbitProfile.race,
-        color: rabbitProfile.color,
-        dateOfBirth: rabbitProfile.dateOfBirth,
-        dateOfDeath: rabbitProfile.dateOfDeath,
-        gender: rabbitProfile.gender,
-        forSale: rabbitProfile.forSale,
-        forBreeding: rabbitProfile.forBreeding,
-        fatherId_Placeholder: rabbitProfile.fatherId_Placeholder,
-        motherId_Placeholder: rabbitProfile.motherId_Placeholder,
-    });
+    const {
+        editedData,
+        isEditing,
+        isSaving,
+        isDeleting,
+        setEditedData,
+        setIsEditing,
+        handleSave,
+        handleDelete
+    } = useRabbitProfile(rabbitProfile);
+
+    const handleChangeOwner = async () => {
+        toast.info('Skift ejer funktionalitet kommer snart');
+    };
 
     const propertyLabels: Record<keyof Omit<Rabbit_ProfileDTO, "father_EarCombId" | "mother_EarCombId" | "children">, string> = {
         earCombId: "Øremærke ID",
@@ -45,109 +41,29 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
         gender: "Køn",
         forSale: "Til salg",
         forBreeding: "Til avl",
-        fatherId_Placeholder: "Far øremærke",     // User-editable field
-        //father_EarCombId: "System Reference",     // Hidden system field
-        motherId_Placeholder: "Mor øremærke",     // User-editable field
-        //mother_EarCombId: "System Reference"      // Hidden system field
+        fatherId_Placeholder: "Far øremærke",
+        motherId_Placeholder: "Mor øremærke",
     };
 
-    const handleSave = async () => {
-        try {
-            setIsSaving(true);
-            const response = await fetch('/api/token');
-            if (!response.ok) {
-                throw new Error('Failed to get token');
-            }
-
-            const { accessToken } = await response.json();
-            if (!accessToken) {
-                toast.error('Du er ikke logget ind');
-                return;
-            }
-
-            const result = await EditRabbit(rabbitProfile.earCombId, editedData, accessToken);
-            if (result) {
-                setIsEditing(false);
-                toast.success('Kaninen blev opdateret');
-                window.location.reload();
-            }
-        } catch (error) {
-            console.error('Error saving:', error);
-            toast.error('Der skete en fejl ved opdatering af kaninen');
-        } finally {
-            setIsSaving(false);
-        }
-    };
-
-    const router = useRouter();
-    const handleDelete = async () => {
-        try {
-            setIsDeleting(true);
-            const response = await fetch('/api/token');
-            if (!response.ok) {
-                throw new Error('Failed to get token');
-            }
-
-            const { accessToken } = await response.json();
-            if (!accessToken) {
-                toast.error('Du er ikke logget ind');
-                return;
-            }
-
-            await DeleteRabbit(rabbitProfile.earCombId, accessToken);
-            toast.success('Kaninen blev slettet');
-            router.push('/rabbits/own');
-        } catch (error) {
-            console.error('Delete failed:', error);
-            toast.error('Der skete en fejl ved sletning af kaninen');
-        } finally {
-            setIsDeleting(false);
-        }
-    };
-
-    const handleChangeOwner = async () => {
-        // TODO: Implement when API is ready
-        toast.info('Skift ejer funktionalitet kommer snart');
-    };
-
-    const renderParentCell = (placeholder: string | null, matchingId: string | null) => {
-        if (!placeholder) return '-';
-
-        return (
-            <div className="flex items-center gap-2">
-                <span>{placeholder}</span>
-                {matchingId ? (
-                    <div className="flex items-center text-success">
-                        <span className="text-sm">✓ findes i systemet</span>
-                    </div>
-                ) : (
-                    <div className="flex items-center text-warning">
-                        <span className="text-sm">⚠ ikke oprettet i systemet</span>
-                    </div>
-                )}
-            </div>
-        );
-    };
-
-    // Update renderCell to handle both display and edit modes for parent fields
     const renderCell = (key: keyof Rabbit_ProfileDTO, value: unknown) => {
-        // Skip rendering system IDs
-        if (key === 'father_EarCombId' || key === 'mother_EarCombId') {
-            return null;
-        }
-
-        // Display mode
-        if (!isEditing || !Object.keys(editedData).includes(key)) {
-            if (key === 'fatherId_Placeholder' || key === 'motherId_Placeholder') {
-                return renderParentCell(
-                    value as string,
-                    key === 'fatherId_Placeholder' ? rabbitProfile.father_EarCombId : rabbitProfile.mother_EarCombId
-                );
+        if (!isEditing) {
+            if (key === 'dateOfBirth' || key === 'dateOfDeath') {
+                return value ? new Date(value as string).toLocaleDateString() : 'Ikke angivet';
             }
             if (typeof value === 'boolean') {
                 return value ? 'Ja' : 'Nej';
             }
-            return String(value ?? '-');
+            return value?.toString() || 'Ikke angivet';
+        }
+
+        if (key === 'nickName') {
+            return (
+                <Input
+                    value={editedData.nickName || ''}
+                    onChange={(e) => setEditedData({ ...editedData, nickName: e.target.value })}
+                    aria-label="Navn"
+                />
+            );
         }
 
         if (key === 'race') {
@@ -167,7 +83,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                     enumType="Color"
                     value={editedData.color}
                     onChange={(value) => setEditedData({ ...editedData, color: value })}
-                    label="Color"
+                    label="Farve"
                 />
             );
         }
@@ -178,55 +94,39 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                     enumType="Gender"
                     value={editedData.gender}
                     onChange={(value) => setEditedData({ ...editedData, gender: value })}
-                    label="Gender"
+                    label="Køn"
                 />
             );
         }
 
-        if (key === 'forSale') {
+        if (key === 'forSale' || key === 'forBreeding') {
             return (
                 <Switch
-                    isSelected={editedData.forSale === "Ja"}
+                    isSelected={editedData[key] === "Ja"}
                     onValueChange={(checked) => setEditedData({
                         ...editedData,
-                        forSale: checked ? "Ja" : "Nej"
+                        [key]: checked ? "Ja" : "Nej"
                     })}
-                    aria-label="Til salg"
+                    aria-label={propertyLabels[key]}
                 >
-                    {editedData.forSale === "Ja" ? "Til salg" : "Ikke til salg"}
+                    {propertyLabels[key]}
                 </Switch>
             );
         }
 
-        if (key === 'forBreeding') {
+        if (key === 'dateOfBirth' || key === 'dateOfDeath') {
             return (
-                <Switch
-                    isSelected={editedData.forBreeding === "Ja"}
-                    onValueChange={(checked) => setEditedData({
-                        ...editedData,
-                        forBreeding: checked ? "Ja" : "Nej"
-                    })}
-                    aria-label="Til avl"
-                >
-                    {editedData.forBreeding === "Ja" ? "Til avl" : "Ikke til avl"}
-                </Switch>
+                <Input
+                    type="date"
+                    value={editedData[key] || ''}
+                    onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
+                    aria-label={propertyLabels[key]}
+                />
             );
         }
 
-        // Edit mode - handle all fields including parent IDs
-        return (
-            <Input
-                type="text"
-                value={String(editedData[key] ?? '')}
-                onChange={(e) => setEditedData({
-                    ...editedData,
-                    [key]: e.target.value
-                })}
-                aria-label={propertyLabels[key]}
-            />
-        );
+        return value?.toString() || 'Ikke angivet';
     };
-
 
     return (
         <>
@@ -246,8 +146,8 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                             <Button
                                 color="primary"
                                 onClick={handleSave}
-                                isLoading={isSaving}  // Use loading state
-                                disabled={isSaving}   // Prevent double-submit
+                                isLoading={isSaving}
+                                disabled={isSaving}
                             >
                                 {isSaving ? 'Gemmer...' : 'Gem'}
                             </Button>
@@ -266,25 +166,21 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                     <Tab key="details" title="Detaljer">
                         <Table aria-label="Kanin detaljer">
                             <TableHeader>
-                                <TableColumn>EGENSKAB</TableColumn>
-                                <TableColumn>VÆRDI</TableColumn>
+                                <TableColumn>Felt</TableColumn>
+                                <TableColumn>Værdi</TableColumn>
                             </TableHeader>
                             <TableBody>
                                 {Object.entries(propertyLabels).map(([key, label]) => (
                                     <TableRow key={key}>
                                         <TableCell>{label}</TableCell>
                                         <TableCell>
-                                            {renderCell(
-                                                key as keyof Rabbit_ProfileDTO,
-                                                rabbitProfile[key as keyof Rabbit_ProfileDTO]
-                                            )}
+                                            {renderCell(key as keyof Rabbit_ProfileDTO, rabbitProfile[key as keyof Rabbit_ProfileDTO])}
                                         </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                     </Tab>
-
                     <Tab key="children" title="Afkom">
                         <Table aria-label="Kanin afkom">
                             <TableHeader>
