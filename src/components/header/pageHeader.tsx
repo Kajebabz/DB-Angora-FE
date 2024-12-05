@@ -7,13 +7,16 @@ const pageTitles: Record<string, string> = {
   '/rabbits/for-sale': 'Kaniner til salg',
   '/rabbits/for-breeding': 'Avlskaniner',
   '/rabbits/own': 'Mine kaniner',
-  '/rabbits/profile': 'Kanin profil'
+  '/rabbits/profile': 'Kanin profil',
+  '/rabbits/create': 'Opret kanin'
 };
 
 export default function PageHeader() {
   const pathname = usePathname();
-  const baseRoute = '/' + pathname.split('/')[1];
-  const title = pageTitles[pathname] || pageTitles[baseRoute] || 'DenBlå-Angora';
+  const baseRoute = pathname.split('/').slice(0, 3).join('/');
+  const title = pathname.startsWith('/rabbits/profile/') 
+    ? 'Kanin profil'
+    : pageTitles[pathname] || pageTitles[baseRoute] || 'DenBlå-Angora';
 
   return (
     <h1 className="text-2xl font-bold text-zinc-100">

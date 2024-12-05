@@ -1,7 +1,7 @@
 // src/components/sectionNav/variants/rabbitOwnNav.tsx
 'use client';
 import { Input, Select, SelectItem } from "@nextui-org/react";
-import SectionNav from '../base/sectionNav';
+import SectionNav from '../base/baseSideNav';
 import { useRouter } from 'next/navigation';
 import { PiRabbitFill } from "react-icons/pi";
 

@@ -1,6 +1,6 @@
 // src/components/sectionNav/variants/rabbitProfileNav.tsx
 'use client';
-import SectionNav from '../base/sectionNav';
+import SectionNav from '../base/baseSideNav';
 import { FaTrash, FaExchangeAlt } from "react-icons/fa";
 
 interface Props {

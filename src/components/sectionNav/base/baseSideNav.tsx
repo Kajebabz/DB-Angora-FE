@@ -1,4 +1,4 @@
-// src/components/sectionNav/base/sectionNav.tsx
+// src/components/sectionNav/base/baseSideNav.tsx
 'use client';
 import { Button } from "@nextui-org/react";
 

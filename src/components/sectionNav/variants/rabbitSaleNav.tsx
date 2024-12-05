@@ -2,7 +2,7 @@
 'use client';
 import { Input, Button, Switch } from "@nextui-org/react";
 import { ForSaleFilters } from "@/types/filterTypes";
-import SectionNav from '../base/sectionNav';
+import SectionNav from '../base/baseSideNav';
 import { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
 import EnumAutocomplete from '@/components/shared/enumAutocomplete'; // Fix import path
