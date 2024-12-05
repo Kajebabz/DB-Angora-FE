@@ -1,12 +1,12 @@
 // src/components/navbar/TopNav.tsx
 'use client'
-import { 
-    Navbar, 
-    NavbarBrand, 
-    NavbarContent, 
-    NavbarItem, 
-    Link, 
-    Avatar 
+import {
+    Navbar,
+    NavbarBrand,
+    NavbarContent,
+    NavbarItem,
+    Link,
+    Avatar
 } from "@nextui-org/react";
 import { GiRabbit } from "react-icons/gi";
 import { usePathname } from 'next/navigation';
@@ -15,31 +15,39 @@ export default function TopNav() {
     const pathname = usePathname();
 
     return (
-        <Navbar 
-            isBordered 
+        <Navbar
+            isBordered
             className="bg-zinc-900/70 backdrop-blur-md backdrop-saturate-150 max-w-7xl mx-auto mt-4 rounded-lg"
             maxWidth="xl"
         >
             <NavbarContent justify="start">
                 <NavbarBrand>
-                    <GiRabbit size={30} className="text-emerald-500 mr-2"/>
+                    <GiRabbit size={30} className="text-emerald-500 mr-2" />
                     <p className="font-bold text-inherit">DenBlå-Angora</p>
                 </NavbarBrand>
                 <NavbarContent className="hidden sm:flex gap-4">
                     <NavbarItem isActive={pathname === '/rabbits/for-sale'}>
-                        <Link 
-                            href="/rabbits/for-sale" 
+                        <Link
+                            href="/rabbits/for-sale"
                             color={pathname === '/rabbits/for-sale' ? "success" : "foreground"}
                         >
-                            Til Salg
+                            Til Salg {/* Konsistent kapitalisering */}
+                        </Link>
+                    </NavbarItem>
+                    <NavbarItem isActive={pathname === '/rabbits/for-breeding'}>
+                        <Link
+                            href="/rabbits/for-breeding"
+                            color={pathname === '/rabbits/for-breeding' ? "success" : "foreground"}
+                        >
+                            Til Avl {/* Konsistent kapitalisering */}
                         </Link>
                     </NavbarItem>
                     <NavbarItem isActive={pathname === '/rabbits/own'}>
-                        <Link 
-                            href="/rabbits/own" 
+                        <Link
+                            href="/rabbits/own"
                             color={pathname === '/rabbits/own' ? "success" : "foreground"}
                         >
-                            Mine Kaniner
+                            Mine Kaniner {/* Konsistent kapitalisering */}
                         </Link>
                     </NavbarItem>
                 </NavbarContent>
