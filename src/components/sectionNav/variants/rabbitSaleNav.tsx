@@ -5,7 +5,7 @@ import { ForSaleFilters } from "@/types/filterTypes";
 import SectionNav from '../base/baseSideNav';
 import { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
-import EnumAutocomplete from '@/components/shared/enumAutocomplete'; // Fix import path
+import EnumAutocomplete from '@/components/shared/enumAutocomplete';
 
 interface Props {
     activeFilters: ForSaleFilters;
@@ -148,3 +148,56 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
         </SectionNav>
     );
 }
+/*
+graph TD
+    subgraph "ForSaleNav (SSR)"
+        A[User ændrer filter] --> B[Opdater localFilters state]
+        B --> C[Klik på Søg knap]
+        C --> D[onFilterChange trigger]
+        D --> E[URL params opdateres]
+        E --> F[Server-side API kald]
+        F --> G[Ny SSR render]
+    end
+
+    subgraph "OwnNav (CSR)"
+        H[User ændrer søgning] --> I[Direkte onChange event]
+        I --> J[Filter lokalt array]
+        J --> K[Re-render med filtreret data]
+    end
+
+//--------------------------
+FORSKELLE:
+ForSaleNav (SSR)
+• Filter genererer URL params
+• Server-side data fetching
+• God for SEO
+• Delbare URLs med filtre
+• Større dataset håndtering
+
+OwnNav (CSR)
+• In-memory filtrering
+• Beskyttet bag auth
+• Hurtigere feedback
+• Mindre dataset
+• Ingen SEO behov (private data)
+
+
+//--------------------
+LIDT OM SEO:
+Man kan ikke SEO optimere indhold bag login af flere grunde:
+
+Crawler Adgang
+• Søgemaskine crawlers kan ikke logge ind
+• Private data er ikke tilgængelig for indeksering
+
+Tekniske Begrænsninger
+• JavaScript-baseret auth blokerer crawlers
+• Cookie/session beskyttelse forhindrer adgang
+• CSR content genereres kun efter succesfuld auth
+
+Best Practices
+
+Private data bør ikke være søgbart
+• Personlige oplysninger skal forblive private
+• Auth er designet til at forhindre uautoriseret adgang
+*/

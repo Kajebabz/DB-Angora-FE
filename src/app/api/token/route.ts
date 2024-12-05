@@ -1,13 +1,29 @@
-// app/api/token/route.ts - Bridge between server-side cookies and client-side requests
+// app/api/token/route.ts
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+
+export async function HEAD() {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('accessToken');
+
+    // Always return 200 for HEAD requests, with different headers
+    return new NextResponse(null, { 
+        status: 200,
+        headers: {
+            'X-Is-Authenticated': accessToken ? 'true' : 'false'
+        }
+    });
+}
 
 export async function GET() {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken');
 
     if (!accessToken) {
-        return NextResponse.json({ error: 'No access token found' }, { status: 401 });
+        return NextResponse.json(
+            { error: 'No access token found' }, 
+            { status: 401 }
+        );
     }
 
     return NextResponse.json({ accessToken: accessToken.value });
@@ -15,21 +31,23 @@ export async function GET() {
 
 /*
 WHY THIS FILE IS NEEDED:
-1. Server/Client Separation:
-   - Server components can read cookies directly
-   - Client components cannot access cookies directly for security
-   - This route acts as a bridge
+1. Auth Status Check:
+   - HEAD request returnerer altid 200 med X-Is-Authenticated header
+   - Bruges til UI state (vis/skjul login knap, beskyttede routes)
+   - Undgår unødvendige 401 fejl i konsollen
 
-2. Request Types:
-   - GET requests (like fetching profile): Cookies sent automatically
-   - PUT/POST requests (like editing): Need explicit token in headers
-   
+2. Token Access:
+   - GET request til actual token hentning
+   - Returnerer 401 hvis ingen token
+   - Bruges når vi skal lave authenticated API kald
+
 3. Flow:
-   Login -> Cookie stored -> 
-   Need to edit? -> Get token from this endpoint -> 
-   Use token in PUT request
+   - UI checker auth status via HEAD
+   - Protected routes henter token via GET
+   - Sikker håndtering af HttpOnly cookies
 
 4. Security:
-   - Cookies are HttpOnly (not accessible via JavaScript)
-   - This endpoint safely exposes just the token
+   - HEAD afslører kun login status, ikke token
+   - GET beskytter token bag 401
+   - Adskiller auth check fra token access
 */

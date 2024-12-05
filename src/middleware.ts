@@ -35,10 +35,10 @@ function isTokenExpired(token: string): boolean {
 
 export const config = {
   matcher: [
-    // Include all rabbit routes except for-sale
-    '/rabbits/:path*',
-    // Exclude for-sale route
-    //'/((?!rabbits/for-sale).*)',
+    '/rabbits/own/:path*',
+    //'/rabbits/profile/:path*',
+    '/rabbits/create/:path*',
+    '/rabbits/for-breeding/:path*'
   ]
 }
 
