@@ -3,16 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1a1a1a;
+  --foreground: #e4e4e7;
+  --primary: #4ade80; 
+  --secondary: #2dd4bf;  
 }
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
 
 @layer components {
   .vertical-center {
@@ -20,18 +15,16 @@
   }
 }
 
+
 @layer components {
   .rabbit-card-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4;
-  }
-  
-  .rabbit-card {
-    @apply max-w-sm hover:shadow-lg transition-shadow;
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4;
   }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
 }

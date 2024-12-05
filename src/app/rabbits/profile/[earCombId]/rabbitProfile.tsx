@@ -1,6 +1,6 @@
 // src/app/rabbits/profile/[earCombId]/rabbitProfile.tsx
 "use client"
-import { Rabbit_ProfileDTO, Rabbit_ChildPreviewDTO } from "@/types/backendTypes";
+import { Rabbit_ProfileDTO } from "@/types/backendTypes";
 import { Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Input, Switch } from "@nextui-org/react";
 import EnumAutocomplete from '@/components/shared/enumAutocomplete';
 import RabbitProfileNav from '@/components/sectionNav/variants/rabbitProfileNav';
@@ -137,42 +137,61 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                 isDeleting={isDeleting}
             />
             <div className="w-full max-w-5xl mx-auto p-4">
-                <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold">{rabbitProfile.nickName}</h1>
-                    {!isEditing ? (
-                        <Button onClick={() => setIsEditing(true)}>Rediger</Button>
-                    ) : (
-                        <div className="space-x-2">
-                            <Button
-                                color="primary"
-                                onClick={handleSave}
-                                isLoading={isSaving}
-                                disabled={isSaving}
-                            >
-                                {isSaving ? 'Gemmer...' : 'Gem'}
-                            </Button>
-                            <Button
-                                color="danger"
-                                onClick={() => setIsEditing(false)}
-                                disabled={isSaving}
-                            >
-                                Annuller
-                            </Button>
-                        </div>
-                    )}
+                <div className="content-card mb-4">
+                    <div className="flex justify-between items-center">
+                        <h1 className="text-2xl font-bold text-zinc-100">
+                            {rabbitProfile.nickName || rabbitProfile.earCombId}
+                        </h1>
+                        {!isEditing ? (
+                            <Button onClick={() => setIsEditing(true)}>Rediger</Button>
+                        ) : (
+                            <div className="space-x-2">
+                                <Button
+                                    color="success"
+                                    onClick={handleSave}
+                                    isLoading={isSaving}
+                                    disabled={isSaving}
+                                >
+                                    {isSaving ? 'Gemmer...' : 'Gem'}
+                                </Button>
+                                <Button
+                                    color="danger"
+                                    onClick={() => setIsEditing(false)}
+                                    disabled={isSaving}
+                                >
+                                    Annuller
+                                </Button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                <Tabs aria-label="Kanin information">
+                <Tabs
+                    aria-label="Kanin information"
+                    className="content-card"
+                    variant="bordered"
+                    color="success"
+                >
                     <Tab key="details" title="Detaljer">
-                        <Table aria-label="Kanin detaljer">
+                        <Table
+                            aria-label="Kanin detaljer"
+                            removeWrapper
+                            className="p-0"
+                            classNames={{
+                                table: "bg-zinc-800/80 backdrop-blur-md backdrop-saturate-150 rounded-lg border border-zinc-700/50",
+                                th: "bg-zinc-900/50 text-zinc-300 border-b border-zinc-700/50",
+                                td: "text-zinc-100",
+                                tr: "hover:bg-zinc-700/30 border-b border-zinc-700/30 last:border-0",
+                            }}
+                        >
                             <TableHeader>
-                                <TableColumn>Felt</TableColumn>
-                                <TableColumn>Værdi</TableColumn>
+                                <TableColumn>FELT</TableColumn>
+                                <TableColumn>VÆRDI</TableColumn>
                             </TableHeader>
                             <TableBody>
                                 {Object.entries(propertyLabels).map(([key, label]) => (
                                     <TableRow key={key}>
-                                        <TableCell>{label}</TableCell>
+                                        <TableCell className="font-medium">{label}</TableCell>
                                         <TableCell>
                                             {renderCell(key as keyof Rabbit_ProfileDTO, rabbitProfile[key as keyof Rabbit_ProfileDTO])}
                                         </TableCell>
@@ -181,8 +200,19 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                             </TableBody>
                         </Table>
                     </Tab>
+
                     <Tab key="children" title="Afkom">
-                        <Table aria-label="Kanin afkom">
+                        <Table
+                            aria-label="Afkom liste"
+                            removeWrapper
+                            className="p-0"
+                            classNames={{
+                                table: "bg-zinc-800/80 backdrop-blur-md backdrop-saturate-150 rounded-lg border border-zinc-700/50",
+                                th: "bg-zinc-900/50 text-zinc-300 border-b border-zinc-700/50",
+                                td: "text-zinc-100",
+                                tr: "hover:bg-zinc-700/30 border-b border-zinc-700/30 last:border-0",
+                            }}
+                        >
                             <TableHeader>
                                 <TableColumn>ØREMÆRKE ID</TableColumn>
                                 <TableColumn>ANDEN FORÆLDER ID</TableColumn>
@@ -192,7 +222,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                                 <TableColumn>FØDSELSDATO</TableColumn>
                             </TableHeader>
                             <TableBody>
-                                {rabbitProfile.children?.map((child: Rabbit_ChildPreviewDTO) => (
+                                {rabbitProfile.children?.map((child) => (
                                     <TableRow key={child.earCombId}>
                                         <TableCell>{child.earCombId}</TableCell>
                                         <TableCell>{child.otherParentId}</TableCell>
@@ -205,7 +235,9 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                                     </TableRow>
                                 )) ?? (
                                         <TableRow>
-                                            <TableCell colSpan={6}>Ingen afkom registreret</TableCell>
+                                            <TableCell colSpan={6} className="text-center">
+                                                Ingen afkom registreret
+                                            </TableCell>
                                         </TableRow>
                                     )}
                             </TableBody>

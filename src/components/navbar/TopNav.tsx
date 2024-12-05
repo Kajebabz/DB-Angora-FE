@@ -1,39 +1,61 @@
-// src>components>navbar>TopNav.tsx
+// src/components/navbar/TopNav.tsx
 'use client'
-
-import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react'
-import Link from 'next/link'
-import React from 'react'
-import { GiRabbit } from 'react-icons/gi'
+import { 
+    Navbar, 
+    NavbarBrand, 
+    NavbarContent, 
+    NavbarItem, 
+    Link, 
+    Avatar 
+} from "@nextui-org/react";
+import { GiRabbit } from "react-icons/gi";
+import { usePathname } from 'next/navigation';
 
 export default function TopNav() {
+    const pathname = usePathname();
+
     return (
-        <Navbar
-            maxWidth='xl'
-            className='bg-gradient-to-r from-green-200 to-green-600'
-            classNames={{
-                item: [
-                    'text-xl',
-                    'text-white',
-                    'uppercase'
-                ]
-            }}
+        <Navbar 
+            isBordered 
+            className="bg-zinc-900/70 backdrop-blur-md backdrop-saturate-150 max-w-7xl mx-auto mt-4 rounded-lg"
+            maxWidth="xl"
         >
-            <NavbarBrand as={Link} href='/'>
-                <GiRabbit size={40} className='text-blue-700 mr-2'/>
-                <div className='font-bold text-3xl flex'>
-                    <span className='text-blue-700 mr-2'>DenBlå</span>
-                    <span className='text-blue-700'>Angora</span>
-                </div>
-            </NavbarBrand>
-            <NavbarContent justify='center'>
-                <NavbarItem as={Link} href='/rabbits/for-sale'>Salg</NavbarItem>
-                <NavbarItem as={Link} href='/rabbits/for-breeding'>Breeding</NavbarItem>
-                <NavbarItem as={Link} href='/rabbits/own'>Egne</NavbarItem>
+            <NavbarContent justify="start">
+                <NavbarBrand>
+                    <GiRabbit size={30} className="text-emerald-500 mr-2"/>
+                    <p className="font-bold text-inherit">DenBlå-Angora</p>
+                </NavbarBrand>
+                <NavbarContent className="hidden sm:flex gap-4">
+                    <NavbarItem isActive={pathname === '/rabbits/for-sale'}>
+                        <Link 
+                            href="/rabbits/for-sale" 
+                            color={pathname === '/rabbits/for-sale' ? "success" : "foreground"}
+                        >
+                            Til Salg
+                        </Link>
+                    </NavbarItem>
+                    <NavbarItem isActive={pathname === '/rabbits/own'}>
+                        <Link 
+                            href="/rabbits/own" 
+                            color={pathname === '/rabbits/own' ? "success" : "foreground"}
+                        >
+                            Mine Kaniner
+                        </Link>
+                    </NavbarItem>
+                </NavbarContent>
             </NavbarContent>
-            <NavbarContent justify='end'>
-                <Button as={Link} href='/auth/login' variant='bordered' className='text-white'>Login</Button>
+
+            <NavbarContent as="div" justify="end">
+                <Avatar
+                    isBordered
+                    as="button"
+                    className="transition-transform"
+                    color="success"
+                    size="sm"
+                    src="https://i.pravatar.cc/150"
+                    onClick={() => window.location.href = '/auth/login'}
+                />
             </NavbarContent>
         </Navbar>
-    )
+    );
 }

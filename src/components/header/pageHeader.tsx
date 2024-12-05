@@ -15,5 +15,9 @@ export default function PageHeader() {
   const baseRoute = '/' + pathname.split('/')[1];
   const title = pageTitles[pathname] || pageTitles[baseRoute] || 'DenBlå-Angora';
 
-  return <h1 className="text-2xl font-bold">{title}</h1>;
+  return (
+    <h1 className="text-2xl font-bold text-zinc-100">
+      {title}
+    </h1>
+  );
 }
