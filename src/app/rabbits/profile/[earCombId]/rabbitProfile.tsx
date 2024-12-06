@@ -2,10 +2,10 @@
 "use client"
 import { Rabbit_ProfileDTO } from "@/types/backendTypes";
 import { Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Input, Switch } from "@nextui-org/react";
-import EnumAutocomplete from '@/components/shared/enumAutocomplete';
-import RabbitProfileNav from '@/components/sectionNav/variants/rabbitProfileNav';
+import EnumAutocomplete from '@/components/enumHandlers/enumAutocomplete';  // Fix pathimport RabbitProfileNav from '@/components/sectionNav/variants/rabbitProfileNav';
 import { useRabbitProfile } from '@/hooks/rabbits/useRabbitProfile';
 import { toast } from "react-toastify";
+import RabbitProfileNav from "@/components/sectionNav/variants/rabbitProfileNav";
 
 type Props = {
     rabbitProfile: Rabbit_ProfileDTO;

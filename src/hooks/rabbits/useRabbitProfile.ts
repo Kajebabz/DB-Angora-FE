@@ -79,3 +79,60 @@ export function useRabbitProfile(initialProfile: Rabbit_ProfileDTO) {
         handleDelete
     };
 }
+/*
+HVORFOR HOOKS, OG HVAD ER DE GODE TIL?
+graph TD
+    A[Uden Hooks] --> B[Problem]
+    B --> C[Al Logic i Components]
+    C --> D[Svær at Genbruge]
+    C --> E[Kompleks State]
+    C --> F[Blandet Ansvar]
+
+    G[Med Hooks] --> H[Løsning]
+    H --> I[Separation of Concerns]
+    H --> J[Genbrugelig Logic]
+    H --> K[Centraliseret State]
+
+----------------- FØR HOOKS ----------------
+export default function RabbitProfile() {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedData, setEditedData] = useState({});
+    const [isDeleting, setIsDeleting] = useState(false);
+    // ... mange states
+    
+    const handleDelete = async () => {  kompleks logic  }
+    const handleSave = async () => {  kompleks logic  }
+    // ... mange handlers
+    
+    return <div> { kompleks UI } </div>
+
+---------------- EFTER HOOKS ----------------
+// useRabbitProfile.ts
+export function useRabbitProfile(rabbitProfile: RabbitProfileDTO) {
+    // Centraliseret state og logic
+    return { isEditing, handleSave, handleDelete };
+}
+
+// RabbitProfile.tsx
+export default function RabbitProfile() {
+    const { isEditing, handleSave } = useRabbitProfile(profile);
+    return <div> kun UI logic </div>
+}
+---------------------------------------------
+Fordele ved Hooks
+1) Separation of Concerns
+• UI i komponenter
+• Business logic i hooks
+• Data fetching i services
+• Genbrugelig Logic
+
+2) Hooks kan bruges på tværs
+• DRY princip
+• Lettere testing
+• Bedre Maintenance
+
+3) Mindre komplekse komponenter
+• Centraliseret state management
+•Cleaner kodebase
+
+*/

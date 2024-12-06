@@ -5,7 +5,7 @@ import { ForSaleFilters } from "@/types/filterTypes";
 import SectionNav from '../base/baseSideNav';
 import { useState } from 'react';
 import { IoMdClose } from "react-icons/io";
-import EnumAutocomplete from '@/components/shared/enumAutocomplete';
+import EnumAutocomplete from '@/components/enumHandlers/enumAutocomplete';
 
 interface Props {
     activeFilters: ForSaleFilters;

@@ -4,6 +4,8 @@ import Providers from "@/components/Providers";
 import TopNav from "@/components/navbar/TopNav";
 import { GiRabbit } from "react-icons/gi";
 import PageHeader from "@/components/header/pageHeader";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -25,6 +27,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
           </main>
         </div>
       </div>
+      <ToastContainer/>
     </Providers>
   );
 }

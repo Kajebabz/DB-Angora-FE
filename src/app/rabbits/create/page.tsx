@@ -2,7 +2,7 @@
 'use client';
 import { useCreateRabbit } from '@/hooks/rabbits/useRabbitCreate';
 import { Input, Button } from '@nextui-org/react';
-import EnumAutocomplete from '@/components/shared/enumAutocomplete';
+import EnumAutocomplete from '@/components/enumHandlers/enumAutocomplete';
 import { useRouter } from 'next/navigation';
 
 export default function CreateRabbitPage() {

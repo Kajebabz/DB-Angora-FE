@@ -33,3 +33,4 @@ export default function RabbitCard({ rabbit, onClick }: Props) {
         </Card>
     );
 }
+// Undersøg: Kan man komme business logic ud({rabbit.<property>) af komponenten og ind i en hook?
