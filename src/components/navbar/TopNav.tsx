@@ -26,7 +26,7 @@ export default function TopNav() {
 
     return (
         <>
-            <Navbar isBordered className="bg-zinc-900/70 backdrop-blur-md backdrop-saturate-150 max-w-7xl mx-auto mt-4 rounded-lg" maxWidth="xl">
+            <Navbar isBordered className="bg-zinc-900/70 backdrop-blur-md backdrop-saturate-150 max-w-7xl mx-auto rounded-lg" maxWidth="xl">
                 <NavbarContent justify="start">
                     <NavbarBrand>
                         <Link href="/" passHref legacyBehavior>

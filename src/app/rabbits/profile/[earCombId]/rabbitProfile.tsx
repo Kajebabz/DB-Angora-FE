@@ -178,8 +178,8 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                             removeWrapper
                             className="p-0"
                             classNames={{
-                                table: "bg-zinc-800/80 backdrop-blur-md backdrop-saturate-150 rounded-lg border border-zinc-700/50",
-                                th: "bg-zinc-900/50 text-zinc-300 border-b border-zinc-700/50",
+                                table: "bg-zinc-800/80 backdrop-blur-md backdrop-saturate-150 rounded-lg border-zinc-700/50",
+                                th: "bg-zinc-900/50 text-zinc-300 border-zinc-700/50",
                                 td: "text-zinc-100",
                                 tr: "hover:bg-zinc-700/30 border-b border-zinc-700/30 last:border-0",
                             }}
@@ -207,7 +207,7 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                             removeWrapper
                             className="p-0"
                             classNames={{
-                                table: "bg-zinc-800/80 backdrop-blur-md backdrop-saturate-150 rounded-lg border border-zinc-700/50",
+                                table: "bg-zinc-800/80 backdrop-blur-md backdrop-saturate-150 rounded-lg border-zinc-700/50",
                                 th: "bg-zinc-900/50 text-zinc-300 border-b border-zinc-700/50",
                                 td: "text-zinc-100",
                                 tr: "hover:bg-zinc-700/30 border-b border-zinc-700/30 last:border-0",
