@@ -9,11 +9,10 @@ export function useAuth() {
 
     const checkAuth = async () => {
         try {
-            const response = await fetch('/api/token', {
+            const response = await fetch('/api/auth/token', {
                 method: 'HEAD'
             });
             
-            // Check authentication status from header
             setIsLoggedIn(response.headers.get('X-Is-Authenticated') === 'true');
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -29,7 +28,9 @@ export function useAuth() {
 
     const logout = async () => {
         try {
-            await fetch('/api/logout', { method: 'POST' });
+            await fetch('/api/auth/logout', {
+                method: 'POST'
+            });
             setIsLoggedIn(false);
             router.push('/');
             router.refresh();

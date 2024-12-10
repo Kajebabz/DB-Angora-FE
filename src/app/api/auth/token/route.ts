@@ -1,4 +1,4 @@
-// app/api/token/route.ts
+// src/app/api/auth/token/route.ts
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 

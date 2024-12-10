@@ -20,7 +20,7 @@ export default function LoginForm({ onSuccess }: Props) {
         event.preventDefault();
         
         try {
-            const response = await fetch('/api/cookieLogin', {
+            const response = await fetch('/api/auth/login', {  // Updated endpoint
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userName, password })
@@ -28,7 +28,7 @@ export default function LoginForm({ onSuccess }: Props) {
     
             if (response.ok) {
                 toast.success('Login succesfuld');
-                await refresh(); // Opdater auth state
+                await refresh();
                 onSuccess?.();
                 router.push('/rabbits/own');
             } else {
