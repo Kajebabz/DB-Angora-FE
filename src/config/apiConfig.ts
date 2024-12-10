@@ -1,14 +1,17 @@
 // src/config/apiConfig.ts
-import { API_URLS } from './constants';
-
 interface ApiConfig {
   baseUrl: string;
   env: string;
 }
 
 export const apiConfig: ApiConfig = {
-  baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || API_URLS.PRODUCTION,
-  env: process.env.NEXT_PUBLIC_API_ENV || 'production'
+  env: process.env.NEXT_PUBLIC_API_ENV || 'production',
+  get baseUrl() {
+    if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+      throw new Error('API_BASE_URL must be defined in environment variables');
+    }
+    return process.env.NEXT_PUBLIC_API_BASE_URL;
+  }
 };
 
 export const getApiUrl = (endpoint: string): string => {
