@@ -1,4 +1,6 @@
 // src/types/enumTypes.ts
+import { getApiUrl } from '@/config/apiConfig';
+
 export type RabbitEnum = 'Race' | 'Color' | 'Gender' | 'IsPublic';
 
 export interface EnumEndpoints {
@@ -9,8 +11,8 @@ export interface EnumEndpoints {
 }
 
 export const ENUM_ENDPOINTS: EnumEndpoints = {
-    Race: 'https://db-angora.dk/api/Enum/Races',
-    Color: 'https://db-angora.dk/api/Enum/Colors',
-    Gender: 'https://db-angora.dk/api/Enum/Genders',
-    IsPublic: 'https://db-angora.dk/api/Enum/IsPublic'
+    Race: getApiUrl('Enum/Races'),
+    Color: getApiUrl('Enum/Colors'),
+    Gender: getApiUrl('Enum/Genders'),
+    IsPublic: getApiUrl('Enum/IsPublic')
 };

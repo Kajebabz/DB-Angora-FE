@@ -1,4 +1,4 @@
-// AuthLogin.ts
+// src/services/AuthLogin.ts
 export async function CookieLogin(userName: string, password: string, rememberMe: boolean): Promise<boolean> {
     try {
         const response = await fetch('http://localhost:3000/api/cookieLogin/', {

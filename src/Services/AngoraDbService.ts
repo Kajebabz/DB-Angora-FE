@@ -1,9 +1,10 @@
 // src/services/AngoraDbService.ts
 import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO, Rabbit_CreateDTO } from "@/types/backendTypes";
 import { ForSaleFilters } from "@/types/filterTypes";
+import { getApiUrl } from '@/config/apiConfig';
 
 export async function CreateRabbit(rabbitData: Rabbit_CreateDTO, accessToken: string): Promise<Rabbit_ProfileDTO> {
-    const response = await fetch('https://db-angora.dk/api/Rabbit/Create', {
+    const response = await fetch(getApiUrl('Rabbit/Create'), {
         method: 'POST',
         headers: { 
             'Authorization': `Bearer ${accessToken}`,
@@ -28,7 +29,7 @@ export async function CreateRabbit(rabbitData: Rabbit_CreateDTO, accessToken: st
 }
 
 export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
-    const data = await fetch('https://db-angora.dk/api/Account/Rabbits_Owned', {
+    const data = await fetch(getApiUrl('Account/Rabbits_Owned'), {
         headers: { Authorization: `Bearer ${accessToken}` }
     });
     const ownRabbits = await data.json();
@@ -41,7 +42,6 @@ export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbi
     
     if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
-            // Only add non-empty values to query
             if (value !== undefined && value !== '' && value !== null) {
                 if (typeof value === 'boolean') {
                     queryParams.append(key, value.toString());
@@ -53,26 +53,22 @@ export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbi
     }
 
     const queryString = queryParams.toString();
-    const url = `https://db-angora.dk/api/Rabbit/Forsale${queryString ? `?${queryString}` : ''}`;
+    const url = `${getApiUrl('Rabbit/Forsale')}${queryString ? `?${queryString}` : ''}`;
     
-    console.log('Fetching URL:', url); // Debug log
+    console.log('Fetching URL:', url);
     const data = await fetch(url);
     return data.json();
 }
 
 export async function GetRabbitsForBreeding(): Promise<Rabbits_PreviewList> {
-
-    const data = await fetch('https://db-angora.dk/api/Rabbit/Forbreeding', {
-    });
-    const rabbitsForBreeding = await data.json();
-
-    return rabbitsForBreeding;
+    const data = await fetch(getApiUrl('Rabbit/Forbreeding'));
+    return data.json();
 }
 
 export async function GetRabbitProfile(accessToken: string, earCombId: string): Promise<Rabbit_ProfileDTO> {
-    const data = await fetch(`https://db-angora.dk/api/Rabbit/Profile/${earCombId}`, {
+    const data = await fetch(getApiUrl(`Rabbit/Profile/${earCombId}`), {
         headers: { Authorization: `Bearer ${accessToken}` }
-    });
+    })
     const rabbitProfile = await data.json();
     //console.log('API Response:', rabbitProfile); // Debug log
     return rabbitProfile;
@@ -81,17 +77,16 @@ export async function GetRabbitProfile(accessToken: string, earCombId: string): 
 export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO, accessToken: string): Promise<Rabbit_ProfileDTO> {
     const formattedData = {
         ...rabbitData,
-        // Ensure dates are in YYYY-MM-DD format
         dateOfBirth: rabbitData.dateOfBirth,
         dateOfDeath: rabbitData.dateOfDeath || null
     };
 
-    const response = await fetch(`https://db-angora.dk/api/Rabbit/Update/${earCombId}`, {
+    const response = await fetch(getApiUrl(`Rabbit/Update/${earCombId}`), {
         method: 'PUT',
         headers: { 
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
-            'accept': 'text/plain'  // TODO: check om unødvendig, når edit virker
+            'accept': 'text/plain'
         },
         body: JSON.stringify(formattedData)
     });
@@ -111,7 +106,7 @@ export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO
 }
 
 export async function DeleteRabbit(earCombId: string, accessToken: string): Promise<Rabbit_PreviewDTO> {
-    const response = await fetch(`https://db-angora.dk/api/Rabbit/Delete/${earCombId}`, {
+    const response = await fetch(getApiUrl(`Rabbit/Delete/${earCombId}`), {
         method: 'DELETE',
         headers: { 
             'Authorization': `Bearer ${accessToken}`,
@@ -133,15 +128,26 @@ export async function DeleteRabbit(earCombId: string, accessToken: string): Prom
     return response.json();
 }
 
+// export async function Login(userName: string, password: string, rememberMe: boolean): Promise<LoginResponse> {
+//     const data = await fetch('https://db-angora.dk/api/Auth/Login', {
+//         method: "POST",
+//         body: JSON.stringify({ userName, password, rememberMe }),
+//         headers: {
+//             "Content-Type": "application/json"
+//         }
+//     });
+//     const ownRabbits = await data.json();
+
+//     return ownRabbits;
+// }
+
 export async function Login(userName: string, password: string, rememberMe: boolean): Promise<LoginResponse> {
-    const data = await fetch('https://db-angora.dk/api/Auth/Login', {
+    const data = await fetch(getApiUrl('Auth/Login'), {
         method: "POST",
         body: JSON.stringify({ userName, password, rememberMe }),
         headers: {
             "Content-Type": "application/json"
         }
     });
-    const ownRabbits = await data.json();
-
-    return ownRabbits;
+    return data.json();
 }
