@@ -1,6 +1,10 @@
 // src/components/navbar/TopNav.tsx
 'use client'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link } from "@nextui-org/react";
+import NextLink from 'next/link';
+import { 
+    Navbar, NavbarBrand, NavbarContent, NavbarItem, 
+    Avatar, Dropdown, DropdownTrigger, DropdownMenu, 
+    DropdownItem} from "@nextui-org/react";
 import { GiRabbit } from "react-icons/gi";
 import { FaUserCircle } from "react-icons/fa";
 import { usePathname } from 'next/navigation';
@@ -28,31 +32,28 @@ export default function TopNav() {
             <Navbar isBordered className="bg-zinc-900/70 backdrop-blur-md backdrop-saturate-150 max-w-7xl mx-auto rounded-lg" maxWidth="xl">
                 <NavbarContent justify="start">
                     <NavbarBrand>
-                        <Link
-                            href="/"
-                            className="flex items-center gap-2"
-                        >
+                        <NextLink href="/" className="flex items-center gap-2">
                             <GiRabbit size={30} className="text-emerald-500" />
                             <p className="font-bold">DenBlå-Angora</p>
-                        </Link>
+                        </NextLink>
                     </NavbarBrand>
 
                     <NavbarContent className="hidden sm:flex gap-4">
                         <NavbarItem isActive={pathname === '/rabbits/for-sale'}>
-                            <Link
+                            <NextLink
                                 href="/rabbits/for-sale"
                                 className={pathname === '/rabbits/for-sale' ? 'text-success' : 'text-foreground'}
                             >
                                 Til Salg
-                            </Link>
+                            </NextLink>
                         </NavbarItem>
                         <NavbarItem isActive={pathname === '/rabbits/for-breeding'}>
-                            <Link
+                            <NextLink
                                 href="/rabbits/for-breeding"
                                 className={pathname === '/rabbits/for-breeding' ? 'text-success' : 'text-foreground'}
                             >
                                 Til Avl
-                            </Link>
+                            </NextLink>
                         </NavbarItem>
                     </NavbarContent>
                 </NavbarContent>
@@ -67,27 +68,32 @@ export default function TopNav() {
                                     className="transition-transform"
                                     color="success"
                                     size="sm"
+                                    showFallback
                                 />
                             </DropdownTrigger>
                             <DropdownMenu aria-label="Profil handlinger">
-                                <DropdownItem>
-                                    <Link href="/rabbits/own" className="w-full">
+                                <DropdownItem key="mine-kaniner">
+                                    <NextLink href="/rabbits/own" className="w-full block">
                                         Mine Kaniner
-                                    </Link>
+                                    </NextLink>
                                 </DropdownItem>
-                                <DropdownItem>
-                                    <button
-                                        onClick={logout}
-                                        className="w-full text-left text-danger"
-                                    >
-                                        Log ud
-                                    </button>
+                                <DropdownItem 
+                                    key="logout"
+                                    className="text-danger"
+                                    onClick={logout}
+                                >
+                                    Log ud
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     ) : (
-                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setIsLoginOpen(true)}>
-                            <span className="text-zinc-400 hover:text-zinc-200">Login</span>
+                        <div 
+                            className="flex items-center gap-2 cursor-pointer" 
+                            onClick={() => setIsLoginOpen(true)}
+                        >
+                            <span className="text-zinc-400 hover:text-zinc-200">
+                                Login
+                            </span>
                             <FaUserCircle
                                 size={32}
                                 className="text-zinc-400 hover:text-zinc-200"

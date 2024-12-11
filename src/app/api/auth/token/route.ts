@@ -2,6 +2,16 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+export async function HEAD() {  // Denne del er til for at kunne vise om man er logged in
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('accessToken');
+    
+    const response = NextResponse.json({});
+    response.headers.set('X-Is-Authenticated', accessToken ? 'true' : 'false');
+    
+    return response;
+}
+
 export async function GET() {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken');
