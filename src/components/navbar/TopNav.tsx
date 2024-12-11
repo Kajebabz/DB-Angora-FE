@@ -1,7 +1,6 @@
 // src/components/navbar/TopNav.tsx
 'use client'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link as NextUILink } from "@nextui-org/react";
-import Link from "next/link";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Avatar, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Link } from "@nextui-org/react";
 import { GiRabbit } from "react-icons/gi";
 import { FaUserCircle } from "react-icons/fa";
 import { usePathname } from 'next/navigation';
@@ -29,27 +28,30 @@ export default function TopNav() {
             <Navbar isBordered className="bg-zinc-900/70 backdrop-blur-md backdrop-saturate-150 max-w-7xl mx-auto rounded-lg" maxWidth="xl">
                 <NavbarContent justify="start">
                     <NavbarBrand>
-                        <Link href="/" passHref legacyBehavior>
-                            <NextUILink className="flex items-center gap-2">
-                                <GiRabbit size={30} className="text-emerald-500" />
-                                <p className="font-bold">DenBlå-Angora</p>
-                            </NextUILink>
+                        <Link
+                            href="/"
+                            className="flex items-center gap-2"
+                        >
+                            <GiRabbit size={30} className="text-emerald-500" />
+                            <p className="font-bold">DenBlå-Angora</p>
                         </Link>
                     </NavbarBrand>
-                    
+
                     <NavbarContent className="hidden sm:flex gap-4">
                         <NavbarItem isActive={pathname === '/rabbits/for-sale'}>
-                            <Link href="/rabbits/for-sale" passHref legacyBehavior>
-                                <NextUILink color={pathname === '/rabbits/for-sale' ? "success" : "foreground"}>
-                                    Til Salg
-                                </NextUILink>
+                            <Link
+                                href="/rabbits/for-sale"
+                                className={pathname === '/rabbits/for-sale' ? 'text-success' : 'text-foreground'}
+                            >
+                                Til Salg
                             </Link>
                         </NavbarItem>
                         <NavbarItem isActive={pathname === '/rabbits/for-breeding'}>
-                            <Link href="/rabbits/for-breeding" passHref legacyBehavior>
-                                <NextUILink color={pathname === '/rabbits/for-breeding' ? "success" : "foreground"}>
-                                    Til Avl
-                                </NextUILink>
+                            <Link
+                                href="/rabbits/for-breeding"
+                                className={pathname === '/rabbits/for-breeding' ? 'text-success' : 'text-foreground'}
+                            >
+                                Til Avl
                             </Link>
                         </NavbarItem>
                     </NavbarContent>
@@ -68,11 +70,18 @@ export default function TopNav() {
                                 />
                             </DropdownTrigger>
                             <DropdownMenu aria-label="Profil handlinger">
-                                <DropdownItem key="rabbits" href="/rabbits/own">
-                                    Mine Kaniner
+                                <DropdownItem>
+                                    <Link href="/rabbits/own" className="w-full">
+                                        Mine Kaniner
+                                    </Link>
                                 </DropdownItem>
-                                <DropdownItem key="logout" color="danger" onClick={logout}>
-                                    Log ud
+                                <DropdownItem>
+                                    <button
+                                        onClick={logout}
+                                        className="w-full text-left text-danger"
+                                    >
+                                        Log ud
+                                    </button>
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>

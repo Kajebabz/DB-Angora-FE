@@ -1,5 +1,5 @@
 // src/services/AngoraDbService.ts
-import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO, Rabbit_CreateDTO } from "@/types/backendTypes";
+import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO, Rabbit_CreateDTO, LoginResponse } from "@/types/backendTypes";
 import { ForSaleFilters } from "@/types/filterTypes";
 import { getApiUrl } from '@/config/apiConfig';
 
@@ -128,28 +128,17 @@ export async function DeleteRabbit(earCombId: string, accessToken: string): Prom
     return response.json();
 }
 
-// export async function Login(userName: string, password: string, rememberMe: boolean): Promise<LoginResponse> {
-//     const data = await fetch('https://db-angora.dk/api/Auth/Login', {
-//         method: "POST",
-//         body: JSON.stringify({ userName, password, rememberMe }),
-//         headers: {
-//             "Content-Type": "application/json"
-//         }
-//     });
-//     const ownRabbits = await data.json();
 
-//     return ownRabbits;
-// }
-
-export async function Login(userName: string, password: string, rememberMe: boolean): Promise<LoginResponse> {
-    const data = await fetch(getApiUrl('Auth/Login'), {
+export async function Login(userName: string, password: string): Promise<LoginResponse> {
+    const response = await fetch(getApiUrl('Auth/Login'), {
         method: "POST",
-        body: JSON.stringify({ userName, password, rememberMe }),
-        headers: {
-            "Content-Type": "application/json"
-        }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password, rememberMe: false })
     });
-    //const ownRabbits = await data.json();
 
-    return data.json();
+    if (!response.ok) {
+        throw new Error(`Login failed: ${response.status}`);
+    }
+
+    return response.json();
 }

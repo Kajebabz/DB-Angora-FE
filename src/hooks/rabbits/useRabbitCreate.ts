@@ -18,7 +18,7 @@ export function useCreateRabbit() { // Changed from useRabbit
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('/api/token');
+            const response = await fetch('/api/auth/token');
             const { accessToken } = await response.json();
 
             if (!accessToken) {

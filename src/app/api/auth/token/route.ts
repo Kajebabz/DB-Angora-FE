@@ -2,19 +2,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-export async function HEAD() {
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get('accessToken');
-
-    // Always return 200 for HEAD requests, with different headers
-    return new NextResponse(null, { 
-        status: 200,
-        headers: {
-            'X-Is-Authenticated': accessToken ? 'true' : 'false'
-        }
-    });
-}
-
 export async function GET() {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken');

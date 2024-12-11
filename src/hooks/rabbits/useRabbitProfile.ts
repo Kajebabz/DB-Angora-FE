@@ -26,7 +26,7 @@ export function useRabbitProfile(initialProfile: Rabbit_ProfileDTO) {
     const handleSave = async () => {
         try {
             setIsSaving(true);
-            const response = await fetch('/api/token');
+            const response = await fetch('/api/auth/token');
             const { accessToken } = await response.json();
             
             if (!accessToken) {
@@ -49,7 +49,7 @@ export function useRabbitProfile(initialProfile: Rabbit_ProfileDTO) {
     const handleDelete = async () => {
         try {
             setIsDeleting(true);
-            const response = await fetch('/api/token');
+            const response = await fetch('/api/auth/token');
             const { accessToken } = await response.json();
             
             if (!accessToken) {

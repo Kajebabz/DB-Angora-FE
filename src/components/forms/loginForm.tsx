@@ -6,58 +6,77 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/hooks/useAuth';
 
-interface Props {
+interface LoginFormProps {
     onSuccess?: () => void;
 }
 
-export default function LoginForm({ onSuccess }: Props) {
+export default function LoginForm({ onSuccess }: LoginFormProps) {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const { refresh } = useAuth();
 
-    const onSubmitHandler = async (event: React.FormEvent) => {
+    const isValid = userName.trim().length >= 2 && password.length >= 6;
+
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+        if (!isValid) return;
         
+        setIsLoading(true);
         try {
-            const response = await fetch('/api/auth/login', {  // Updated endpoint
+            const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userName, password })
+                body: JSON.stringify({ 
+                    userName: userName.trim(), 
+                    password 
+                })
             });
-    
+
             if (response.ok) {
-                toast.success('Login succesfuld');
                 await refresh();
+                toast.success('Login succesfuld');
                 onSuccess?.();
                 router.push('/rabbits/own');
             } else {
-                const errorData = await response.json();
-                toast.error(`Login fejlede: ${errorData.error}`);
+                const error = await response.json();
+                toast.error(error.error || 'Ugyldigt login');
             }
         } catch (error) {
-            console.error('Login fejl:', error);
-            toast.error('Der skete en uventet fejl ved login');
+            console.error('Login error:', error);
+            toast.error('Der skete en uventet fejl');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <form onSubmit={onSubmitHandler} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input
                 label="Brugernavn"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
+                isDisabled={isLoading}
                 required
+                minLength={2}
             />
             <Input
                 label="Password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                isDisabled={isLoading}
                 required
+                minLength={6}
             />
-            <Button type="submit" color="success">
-                Login
+            <Button 
+                type="submit" 
+                color="success"
+                isLoading={isLoading}
+                isDisabled={!isValid || isLoading}
+            >
+                {isLoading ? 'Logger ind...' : 'Login'}
             </Button>
         </form>
     );
