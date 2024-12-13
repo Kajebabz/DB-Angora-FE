@@ -12,7 +12,17 @@ export async function POST(request: NextRequest) {
         }
 
         const response = NextResponse.json({ success: true });
+
+        console.log('Setting userName cookie:', userName);
+
         response.cookies.set('accessToken', loginResponse.accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/'
+        });
+
+        response.cookies.set('userName', userName, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',

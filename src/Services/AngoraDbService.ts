@@ -1,5 +1,5 @@
 // src/services/AngoraDbService.ts
-import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO, Rabbit_CreateDTO, LoginResponse } from "@/types/backendTypes";
+import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO, Rabbit_CreateDTO, LoginResponse, User_ProfileDTO } from "@/types/backendTypes";
 import { ForSaleFilters } from "@/types/filterTypes";
 import { getApiUrl } from '@/config/apiConfig';
 
@@ -151,3 +151,12 @@ export async function Login(userName: string, password: string): Promise<LoginRe
 
     return response.json();
 }
+
+export async function GetUserProfile(accessToken: string, userProfileId: string): Promise<User_ProfileDTO> {
+    const data = await fetch(getApiUrl(`Account/UserProfile/${userProfileId}`), {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const userProfile = await data.json();
+    return userProfile;
+}
+

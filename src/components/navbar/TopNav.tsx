@@ -1,10 +1,11 @@
 // src/components/navbar/TopNav.tsx
 'use client'
 import NextLink from 'next/link';
-import { 
-    Navbar, NavbarBrand, NavbarContent, NavbarItem, 
-    Avatar, Dropdown, DropdownTrigger, DropdownMenu, 
-    DropdownItem} from "@nextui-org/react";
+import {
+    Navbar, NavbarBrand, NavbarContent, NavbarItem,
+    Avatar, Dropdown, DropdownTrigger, DropdownMenu,
+    DropdownItem
+} from "@nextui-org/react";
 import { GiRabbit } from "react-icons/gi";
 import { FaUserCircle } from "react-icons/fa";
 import { usePathname } from 'next/navigation';
@@ -15,7 +16,7 @@ import LoginModal from '../modals/loginModal';
 export default function TopNav() {
     const pathname = usePathname();
     const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const { isLoggedIn, logout, refresh } = useAuth();
+    const { isLoggedIn, userName, logout, refresh } = useAuth();
 
     useEffect(() => {
         refresh();
@@ -62,22 +63,29 @@ export default function TopNav() {
                     {isLoggedIn ? (
                         <Dropdown placement="bottom-end">
                             <DropdownTrigger>
-                                <Avatar
-                                    isBordered
-                                    as="button"
-                                    className="transition-transform"
-                                    color="success"
-                                    size="sm"
-                                    showFallback
-                                />
+                                <div className="flex items-center gap-5">
+                                    <span className="text-emerald-500"> {userName} </span>
+                                    <Avatar
+                                        isBordered
+                                        as="button"
+                                        color="success"
+                                        size="sm"
+                                        showFallback
+                                    />
+                                </div>
                             </DropdownTrigger>
-                            <DropdownMenu aria-label="Profil handlinger">
+                            <DropdownMenu aria-label="Profil handlinger" className='text-zinc-600'>
                                 <DropdownItem key="mine-kaniner">
                                     <NextLink href="/rabbits/own" className="w-full block">
                                         Mine Kaniner
                                     </NextLink>
                                 </DropdownItem>
-                                <DropdownItem 
+                                <DropdownItem key="user-profile">
+                                    <NextLink href="/user/profile" className="w-full block">
+                                        UserProfile
+                                    </NextLink>
+                                </DropdownItem>
+                                <DropdownItem
                                     key="logout"
                                     className="text-danger"
                                     onClick={logout}
@@ -87,8 +95,8 @@ export default function TopNav() {
                             </DropdownMenu>
                         </Dropdown>
                     ) : (
-                        <div 
-                            className="flex items-center gap-2 cursor-pointer" 
+                        <div
+                            className="flex items-center gap-2 cursor-pointer"
                             onClick={() => setIsLoginOpen(true)}
                         >
                             <span className="text-zinc-400 hover:text-zinc-200">

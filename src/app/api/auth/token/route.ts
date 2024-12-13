@@ -5,9 +5,11 @@ import { NextResponse } from 'next/server';
 export async function HEAD() {  // Denne del er til for at kunne vise om man er logged in
     const cookieStore = await cookies();
     const accessToken = cookieStore.get('accessToken');
+    const userName = cookieStore.get('userName');
     
     const response = NextResponse.json({});
     response.headers.set('X-Is-Authenticated', accessToken ? 'true' : 'false');
+    response.headers.set('X-User-Name', userName ? userName.value : '');
     
     return response;
 }

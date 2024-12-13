@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export function useAuth() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userName, setUserName] = useState('');
     const router = useRouter();
 
     const checkAuth = async () => {
@@ -13,10 +14,13 @@ export function useAuth() {
                 method: 'HEAD',
                 credentials: 'include'
             });
-            
+
             const isAuthenticated = response.headers.get('X-Is-Authenticated') === 'true';
-            console.log('🔒 Auth state:', { isAuthenticated });
+            const username = response.headers.get('X-User-Name') || '';
+
+            console.log('🔒 Auth state:', { isAuthenticated, username });
             setIsLoggedIn(isAuthenticated);
+            setUserName(username);
             return isAuthenticated;
         } catch (error) {
             console.error('❌ Auth check failed:', error);
@@ -45,5 +49,5 @@ export function useAuth() {
         checkAuth();
     }, []);
 
-    return { isLoggedIn, logout, refresh: checkAuth };
+    return { isLoggedIn, userName, logout, refresh: checkAuth };
 }

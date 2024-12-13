@@ -45,8 +45,8 @@ export default function OwnNav({ search, filterGender, onSearchChange, onGenderC
                     aria-label="Filtrer efter køn"
                 >
                     <SelectItem key="all" value="all">Alle</SelectItem>
-                    <SelectItem key="Buck" value="Buck">Han</SelectItem>
-                    <SelectItem key="Doe" value="Doe">Hun</SelectItem>
+                    <SelectItem className="text-zinc-600" key="Buck" value="Buck">Han</SelectItem>
+                    <SelectItem className="text-zinc-600" key="Doe" value="Doe">Hun</SelectItem>
                 </Select>
             </div>
         </SectionNav>
