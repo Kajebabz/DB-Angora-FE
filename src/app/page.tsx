@@ -1,6 +1,7 @@
 // src/app/page.tsx
 'use client';
 
+import { Button } from "@nextui-org/react";
 import { GiRabbit } from "react-icons/gi";
 
 export default function Home() {
