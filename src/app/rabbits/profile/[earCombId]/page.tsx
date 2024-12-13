@@ -1,4 +1,4 @@
-// app/rabbits/profile/[earCombId]/page.tsx
+// src/app/rabbits/profile/[earCombId]/page.tsx
 import { GetRabbitProfile } from "@/services/AngoraDbService";
 import { cookies } from "next/headers";
 import RabbitProfile from "./rabbitProfile";

@@ -1,14 +1,31 @@
-import { getApiUrl } from "@/config/apiConfig";
-import { LoginResponse, Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList } from "@/types/backendTypes";
+// src/services/AngoraDbService.ts
+import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO, Rabbit_CreateDTO, LoginResponse } from "@/types/backendTypes";
+import { ForSaleFilters } from "@/types/filterTypes";
+import { getApiUrl } from '@/config/apiConfig';
 
+export async function CreateRabbit(rabbitData: Rabbit_CreateDTO, accessToken: string): Promise<Rabbit_ProfileDTO> {
+    const response = await fetch(getApiUrl('Rabbit/Create'), {
+        method: 'POST',
+        headers: { 
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'accept': 'text/plain'
+        },
+        body: JSON.stringify(rabbitData)
+    });
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText,
+            sentData: rabbitData
+        });
+        throw new Error(`Failed to create rabbit: ${response.status} ${response.statusText}`);
+    }
 
-
-// ENUM
-export async function GetRaces(): Promise<string[]> {
-    const data = await fetch('https://db-angora.azurewebsites.net/api/Enum/Races');
-    const races = await data.json();
-
-    return races;
+    return response.json();
 }
 
 // export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
@@ -29,29 +46,56 @@ export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_Previe
     return ownRabbits;
 }
 
+export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbits_PreviewList> {
+    const queryParams = new URLSearchParams();
+    
+    if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value !== undefined && value !== '' && value !== null) {
+                if (typeof value === 'boolean') {
+                    queryParams.append(key, value.toString());
+                } else if (typeof value === 'string' && value.trim() !== '') {
+                    queryParams.append(key, value.trim());
+                }
+            }
+        });
+    }
+
+    const queryString = queryParams.toString();
+    const url = `${getApiUrl('Rabbit/Forsale')}${queryString ? `?${queryString}` : ''}`;
+    
+    console.log('Fetching URL:', url);
+    const data = await fetch(url);
+    return data.json();
+}
+
+export async function GetRabbitsForBreeding(): Promise<Rabbits_PreviewList> {
+    const data = await fetch(getApiUrl('Rabbit/Forbreeding'));
+    return data.json();
+}
+
 export async function GetRabbitProfile(accessToken: string, earCombId: string): Promise<Rabbit_ProfileDTO> {
-    const data = await fetch(getApiUrl(`/Rabbit/Profile/${earCombId}`), {
+    const data = await fetch(getApiUrl(`Rabbit/Profile/${earCombId}`), {
         headers: { Authorization: `Bearer ${accessToken}` }
-    });
+    })
     const rabbitProfile = await data.json();
-    console.log('API Response:', rabbitProfile); // Debug log
+    //console.log('API Response:', rabbitProfile); // Debug log
     return rabbitProfile;
 }
 
 export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO, accessToken: string): Promise<Rabbit_ProfileDTO> {
     const formattedData = {
         ...rabbitData,
-        // Ensure dates are in YYYY-MM-DD format
         dateOfBirth: rabbitData.dateOfBirth,
         dateOfDeath: rabbitData.dateOfDeath || null
     };
 
-    const response = await fetch(getApiUrl(`/Rabbit/Update/${earCombId}`), {
+    const response = await fetch(getApiUrl(`Rabbit/Update/${earCombId}`), {
         method: 'PUT',
         headers: { 
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
-            'accept': 'text/plain'  // TODO: check om unødvendig, når edit virker
+            'accept': 'text/plain'
         },
         body: JSON.stringify(formattedData)
     });
@@ -70,24 +114,40 @@ export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO
     return response.json();
 }
 
-export async function Login(userName: string, password: string, rememberMe: boolean): Promise<LoginResponse> {
-    const data = await fetch(getApiUrl('/Auth/Login'), {
-        method: "POST",
-        body: JSON.stringify({ userName, password, rememberMe }),
-        headers: {
-            "Content-Type": "application/json"
+export async function DeleteRabbit(earCombId: string, accessToken: string): Promise<Rabbit_PreviewDTO> {
+    const response = await fetch(getApiUrl(`Rabbit/Delete/${earCombId}`), {
+        method: 'DELETE',
+        headers: { 
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'accept': 'text/plain'
         }
     });
-    const ownRabbits = await data.json();
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error:', {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorText
+        });
+        throw new Error(`Failed to delete rabbit: ${response.status} ${response.statusText}`);
+    }
 
-    return ownRabbits;
+    return response.json();
 }
 
-export async function GetRabbitsForSale(): Promise<Rabbits_PreviewList> {
 
-    const data = await fetch(getApiUrl('/Rabbit/Forsale'), {
+export async function Login(userName: string, password: string): Promise<LoginResponse> {
+    const response = await fetch(getApiUrl('Auth/Login'), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password, rememberMe: false })
     });
-    const rabbitsForSale = await data.json();
 
-    return rabbitsForSale;
+    if (!response.ok) {
+        throw new Error(`Login failed: ${response.status}`);
+    }
+
+    return response.json();
 }

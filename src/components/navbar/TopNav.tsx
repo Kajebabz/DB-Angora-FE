@@ -1,91 +1,112 @@
-// 'use client'
-
-// import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react'
-// import Link from 'next/link'
-// import React from 'react'
-// import { GiRabbit } from 'react-icons/gi'
-
-// export default function TopNav() {
-//     return (
-//         <Navbar
-//             maxWidth='xl'
-//             className='bg-gradient-to-r from-green-200 to-green-600'
-//             classNames={{
-//                 item: [
-//                     'text-xl',
-//                     'text-white',
-//                     'uppercase'
-//                 ]
-//             }}
-//         >
-//             <NavbarBrand as={Link} href='/'>
-//                 <GiRabbit size={40} className='text-blue-700 mr-2'/>
-//                 <div className='font-bold text-3xl flex'>
-//                     <span className='text-blue-700 mr-2'>DenBlå</span>
-//                     <span className='text-blue-700'>Angora</span>
-//                 </div>
-//             </NavbarBrand>
-//             <NavbarContent justify='center'>
-//                 <NavbarItem as={Link} href='/rabbits/for-sale'>Salg</NavbarItem>
-//                 <NavbarItem as={Link} href='/rabbits/for-breeding'>Breeding</NavbarItem>
-//                 <NavbarItem as={Link} href='/rabbits/own'>Egne</NavbarItem>
-//             </NavbarContent>
-//             <NavbarContent justify='end'>
-//                 <Button as={Link} href='/auth/login' variant='bordered' className='text-white'>Login</Button>
-//             </NavbarContent>
-//         </Navbar>
-//     )
-// }
-
-'use client';
-
-import LoginModal from '@/app/auth/login/LoginModal';
-import { Button, Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/react';
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { GiRabbit } from 'react-icons/gi';
+// src/components/navbar/TopNav.tsx
+'use client'
+import NextLink from 'next/link';
+import { 
+    Navbar, NavbarBrand, NavbarContent, NavbarItem, 
+    Avatar, Dropdown, DropdownTrigger, DropdownMenu, 
+    DropdownItem} from "@nextui-org/react";
+import { GiRabbit } from "react-icons/gi";
+import { FaUserCircle } from "react-icons/fa";
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import LoginModal from '../modals/loginModal';
 
 export default function TopNav() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const pathname = usePathname();
+    const [isLoginOpen, setIsLoginOpen] = useState(false);
+    const { isLoggedIn, logout, refresh } = useAuth();
 
-    const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    useEffect(() => {
+        refresh();
+    }, [pathname, refresh]);
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            setIsLoginOpen(false);
+        }
+    }, [isLoggedIn]);
 
     return (
         <>
-            <Navbar
-                maxWidth="xl"
-                className="bg-gradient-to-r from-green-200 to-green-600"
-                classNames={{
-                    item: ['text-xl', 'text-white', 'uppercase'],
-                }}
-            >
-                <NavbarBrand as={Link} href="/">
-                    <GiRabbit size={40} className="text-blue-700 mr-2" />
-                    <div className="font-bold text-3xl flex">
-                        <span className="text-blue-700 mr-2">DenBlå</span>
-                        <span className="text-blue-700">Angora</span>
-                    </div>
-                </NavbarBrand>
-                <NavbarContent justify="center">
-                    <NavbarItem as={Link} href="/rabbits/for-sale">
-                        Salg
-                    </NavbarItem>
-                    <NavbarItem as={Link} href="/rabbits/for-breeding">
-                        Breeding
-                    </NavbarItem>
-                    <NavbarItem as={Link} href="/rabbits/own">
-                        Egne
-                    </NavbarItem>
+            <Navbar isBordered className="bg-zinc-900/70 backdrop-blur-md backdrop-saturate-150 max-w-7xl mx-auto rounded-lg" maxWidth="xl">
+                <NavbarContent justify="start">
+                    <NavbarBrand>
+                        <NextLink href="/" className="flex items-center gap-2">
+                            <GiRabbit size={30} className="text-emerald-500" />
+                            <p className="font-bold">DenBlå-Angora</p>
+                        </NextLink>
+                    </NavbarBrand>
+
+                    <NavbarContent className="hidden sm:flex gap-4">
+                        <NavbarItem isActive={pathname === '/rabbits/for-sale'}>
+                            <NextLink
+                                href="/rabbits/for-sale"
+                                className={pathname === '/rabbits/for-sale' ? 'text-success' : 'text-foreground'}
+                            >
+                                Til Salg
+                            </NextLink>
+                        </NavbarItem>
+                        <NavbarItem isActive={pathname === '/rabbits/for-breeding'}>
+                            <NextLink
+                                href="/rabbits/for-breeding"
+                                className={pathname === '/rabbits/for-breeding' ? 'text-success' : 'text-foreground'}
+                            >
+                                Til Avl
+                            </NextLink>
+                        </NavbarItem>
+                    </NavbarContent>
                 </NavbarContent>
-                <NavbarContent justify="end">
-                    <Button variant="bordered" className="text-white" onClick={openModal}>
-                        Login
-                    </Button>
+
+                <NavbarContent as="div" justify="end">
+                    {isLoggedIn ? (
+                        <Dropdown placement="bottom-end">
+                            <DropdownTrigger>
+                                <Avatar
+                                    isBordered
+                                    as="button"
+                                    className="transition-transform"
+                                    color="success"
+                                    size="sm"
+                                    showFallback
+                                />
+                            </DropdownTrigger>
+                            <DropdownMenu aria-label="Profil handlinger">
+                                <DropdownItem key="mine-kaniner">
+                                    <NextLink href="/rabbits/own" className="w-full block">
+                                        Mine Kaniner
+                                    </NextLink>
+                                </DropdownItem>
+                                <DropdownItem 
+                                    key="logout"
+                                    className="text-danger"
+                                    onClick={logout}
+                                >
+                                    Log ud
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    ) : (
+                        <div 
+                            className="flex items-center gap-2 cursor-pointer" 
+                            onClick={() => setIsLoginOpen(true)}
+                        >
+                            <span className="text-zinc-400 hover:text-zinc-200">
+                                Login
+                            </span>
+                            <FaUserCircle
+                                size={32}
+                                className="text-zinc-400 hover:text-zinc-200"
+                            />
+                        </div>
+                    )}
                 </NavbarContent>
             </Navbar>
-            <LoginModal isOpen={isModalOpen} onClose={closeModal} />
+
+            <LoginModal
+                isOpen={isLoginOpen}
+                onClose={() => setIsLoginOpen(false)}
+            />
         </>
     );
 }
-

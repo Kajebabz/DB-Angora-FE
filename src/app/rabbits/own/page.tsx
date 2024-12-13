@@ -1,7 +1,7 @@
 // app/rabbits/page.tsx (server component)
 import { GetOwnRabbits } from '@/services/AngoraDbService';
 import { cookies } from 'next/headers';
-import RabbitList from './rabbitList';
+import RabbitOwnList from './rabbitOwnList';
 
 export default async function RabbitsPage() {
     const cookieStore = await cookies();
@@ -12,5 +12,5 @@ export default async function RabbitsPage() {
         return <div>No rabbits found</div>;
     }
 
-    return <RabbitList rabbits={ownRabbits} />; // Send array direkte
+    return <RabbitOwnList rabbits={ownRabbits} />; // Send array direkte
 }

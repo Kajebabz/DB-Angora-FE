@@ -1,21 +1,21 @@
 // app/rabbits/for-breeding/page.tsx
 'use client';
-import { GetRabbitsForSale } from '@/services/AngoraDbService'
+import { GetRabbitsForBreeding } from '@/services/AngoraDbService'
 import RabbitCard from '@/components/cards/rabbitCard';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Rabbit_PreviewDTO } from '@/types/backendTypes';
 
-export default function ForSalePage() {
+export default function ForBreedingPage() {
     const router = useRouter();
-    const [rabbitsForSale, setRabbitsForSale] = useState<Rabbit_PreviewDTO[]>([]);
+    const [rabbitsForBreeding, setRabbitsForBreeding] = useState<Rabbit_PreviewDTO[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     
     useEffect(() => {
         const fetchRabbits = async () => {
             try {
-                const result = await GetRabbitsForSale();
-                setRabbitsForSale(result); // Direct array now
+                const result = await GetRabbitsForBreeding();
+                setRabbitsForBreeding(result); // Direct array now
             } catch (error) {
                 console.error('Failed to fetch rabbits:', error);
             } finally {
@@ -34,13 +34,13 @@ export default function ForSalePage() {
         return <div>Loading...</div>;
     }
 
-    if (!rabbitsForSale.length) {
-        return <div>Ingen kaniner til salg</div>;
+    if (!rabbitsForBreeding.length) {
+        return <div>Ingen kaniner til avl</div>;
     }
 
     return (
         <div className="rabbit-card-grid">
-            {rabbitsForSale.map((rabbit) => (
+            {rabbitsForBreeding.map((rabbit) => (
                 <RabbitCard 
                     key={rabbit.earCombId} 
                     rabbit={rabbit}
