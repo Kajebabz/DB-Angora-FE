@@ -1,11 +1,11 @@
 // src/components/cards/RabbitCardGrid.tsx
-import { Rabbit_PreviewDTO } from '@/types/backendTypes';
+import { Rabbit_ForsalePreviewDTO } from '@/types/backendTypes';
 import RabbitCard from './rabbitCard';
 
-type Props = {
-    rabbits: Rabbit_PreviewDTO[];
-    onCardClick?: (rabbit: Rabbit_PreviewDTO) => void;
-};
+interface Props {
+    rabbits: Rabbit_ForsalePreviewDTO[];
+    onCardClick?: (rabbit: Rabbit_ForsalePreviewDTO) => void;
+}
 
 export default function RabbitCardGrid({ rabbits, onCardClick }: Props) {
     return (

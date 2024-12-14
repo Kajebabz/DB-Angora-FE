@@ -1,5 +1,5 @@
 // src/services/AngoraDbService.ts
-import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_PreviewList, Rabbit_PreviewDTO, Rabbit_CreateDTO, LoginResponse } from "@/types/backendTypes";
+import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_ForsalePreviewList, Rabbit_ForsalePreviewDTO, Rabbit_CreateDTO, LoginResponse } from "@/types/backendTypes";
 import { ForSaleFilters } from "@/types/filterTypes";
 import { getApiUrl } from '@/config/apiConfig';
 
@@ -28,7 +28,7 @@ export async function CreateRabbit(rabbitData: Rabbit_CreateDTO, accessToken: st
     return response.json();
 }
 
-export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
+export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_ForsalePreviewList> {
     const data = await fetch(getApiUrl('Account/Rabbits_Owned'), {
         headers: { Authorization: `Bearer ${accessToken}` }
     });
@@ -37,7 +37,7 @@ export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_Previe
     return ownRabbits;
 }
 
-export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbits_PreviewList> {
+export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbits_ForsalePreviewList> {
     const queryParams = new URLSearchParams();
     
     if (filters) {
@@ -60,7 +60,7 @@ export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbi
     return data.json();
 }
 
-export async function GetRabbitsForBreeding(): Promise<Rabbits_PreviewList> {
+export async function GetRabbitsForBreeding(): Promise<Rabbits_ForsalePreviewList> {
     const data = await fetch(getApiUrl('Rabbit/Forbreeding'));
     return data.json();
 }
@@ -105,7 +105,7 @@ export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO
     return response.json();
 }
 
-export async function DeleteRabbit(earCombId: string, accessToken: string): Promise<Rabbit_PreviewDTO> {
+export async function DeleteRabbit(earCombId: string, accessToken: string): Promise<Rabbit_ForsalePreviewDTO> {
     const response = await fetch(getApiUrl(`Rabbit/Delete/${earCombId}`), {
         method: 'DELETE',
         headers: { 
