@@ -2,7 +2,7 @@
 'use client';
 import { Rabbit_PreviewDTO } from '@/types/backendTypes';
 import { useRouter } from 'next/navigation';
-import RabbitCard from '@/components/cards/rabbitCard';
+import RabbitCard from '@/components/cards/rabbitForsaleCard';
 import OwnNav from '@/components/sectionNav/variants/rabbitOwnNav';
 import { useOwnRabbits } from '@/hooks/rabbits/useOwnRabbits';
 

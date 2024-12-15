@@ -1,11 +1,11 @@
-// src/hooks/rabbits/useRabbitsForSale.ts
+// src/hooks/rabbits/useRabbitsData.ts
 import { useState, useEffect } from 'react';
 import { GetRabbitsForSale } from '@/services/AngoraDbService';
 import { ForSaleFilters } from '@/types/filterTypes';
-import { Rabbit_PreviewDTO } from '@/types/backendTypes';
+import { Rabbits_ForsalePreviewList } from '@/types/backendTypes';
 
 export function useRabbitsForSale(filters: ForSaleFilters) {
-    const [rabbits, setRabbits] = useState<Rabbit_PreviewDTO[]>([]);
+    const [rabbits, setRabbits] = useState<Rabbits_ForsalePreviewList>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
@@ -15,8 +15,20 @@ export function useRabbitsForSale(filters: ForSaleFilters) {
         
         const fetchRabbits = async () => {
             try {
-                const data = await GetRabbitsForSale(filters);
+                // Clean filters - remove undefined values
+                const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
+                    if (value !== undefined && value !== null) {
+                        acc[key] = value;
+                    }
+                    return acc;
+                }, {} as ForSaleFilters);
+
+                //console.log('Clean filters:', cleanFilters); // Debug log
+                
+                const data = await GetRabbitsForSale(cleanFilters);
+                
                 if (isMounted) {
+                    console.log('Received rabbits:', data);
                     setRabbits(data);
                     setError(null);
                 }
@@ -40,7 +52,7 @@ export function useRabbitsForSale(filters: ForSaleFilters) {
         rabbits, 
         isLoading, 
         error,
-        refetch: () => setIsLoading(true) // Trigger ny fetch
+        refetch: () => setIsLoading(true)
     };
 }
 /*

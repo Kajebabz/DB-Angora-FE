@@ -1,7 +1,7 @@
 // app/rabbits/for-breeding/page.tsx
 'use client';
 import { GetRabbitsForBreeding } from '@/services/AngoraDbService'
-import RabbitCard from '@/components/cards/rabbitCard';
+import RabbitCard from '@/components/cards/rabbitForsaleCard';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Rabbit_PreviewDTO } from '@/types/backendTypes';

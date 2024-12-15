@@ -1,6 +1,5 @@
-// components/sectionNav/variants/forSaleNav.tsx
-'use client';
-import { Input, Button, Switch } from "@nextui-org/react";
+// src/components/sectionNav/variants/forSaleNav.tsx
+import { Input, Button } from "@nextui-org/react";
 import { ForSaleFilters } from "@/types/filterTypes";
 import SectionNav from '../base/baseSideNav';
 import { useState } from 'react';
@@ -15,30 +14,24 @@ interface Props {
 export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
     const [localFilters, setLocalFilters] = useState<ForSaleFilters>(activeFilters);
 
-    const handleLocalFilter = (key: keyof ForSaleFilters, value: string | null) => {
-        const newFilters = { ...localFilters };
-        if (!value) {
-            delete newFilters[key];
+    const handleLocalFilter = (key: keyof ForSaleFilters, value: string | number | null) => {
+        const newFilters = { ...localFilters } as ForSaleFilters;
+        if (value === null) {
+            newFilters[key] = undefined;
         } else {
-            switch (key) {
-                case 'isJuvenile':
-                case 'approvedRaceColorCombination':
-                    newFilters[key] = value === 'true';
-                    break;
-                case 'rightEarId':
-                case 'race':
-                case 'color':
-                case 'gender':
-                    newFilters[key] = value;
-                    break;
+            if (key === 'MinZipCode' || key === 'MaxZipCode') {
+                newFilters[key] = Number(value);
+            } else {
+                newFilters[key] = value as string;
             }
         }
+        console.log('Updating filters:', key, value, newFilters);
         setLocalFilters(newFilters);
     };
 
     const handleSearch = () => onFilterChange(localFilters);
     const handleClear = (key: keyof ForSaleFilters) => {
-        const newFilters = { ...localFilters };
+        const newFilters: ForSaleFilters = { ...localFilters };
         delete newFilters[key];
         setLocalFilters(newFilters);
         onFilterChange(newFilters);
@@ -53,16 +46,16 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
                 <div className="flex items-center gap-2">
                     <Input
                         placeholder="Søg ID..."
-                        value={localFilters.rightEarId ?? ''}
-                        onChange={(e) => handleLocalFilter('rightEarId', e.target.value || null)}
+                        value={localFilters.RightEarId ?? ''}
+                        onChange={(e) => handleLocalFilter('RightEarId', e.target.value || null)}
                         className="max-w-xs"
                         endContent={
-                            localFilters.rightEarId && (
+                            localFilters.RightEarId && (
                                 <Button
                                     isIconOnly
                                     size="sm"
                                     variant="light"
-                                    onClick={() => handleClear('rightEarId')}
+                                    onClick={() => handleClear('RightEarId')}
                                 >
                                     <IoMdClose />
                                 </Button>
@@ -74,17 +67,17 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
                 <div className="flex items-center gap-2 min-w-[200px]">
                     <EnumAutocomplete
                         enumType="Race"
-                        value={localFilters.race ?? null}
-                        onChange={(value) => handleLocalFilter('race', value)}
+                        value={localFilters.Race ?? null}
+                        onChange={(value) => handleLocalFilter('Race', value)}
                         label="Race"
                         id="race-select"
                     />
-                    {localFilters.race && (
+                    {localFilters.Race && (
                         <Button
                             isIconOnly
                             size="sm"
                             variant="light"
-                            onClick={() => handleClear('race')}
+                            onClick={() => handleClear('Race')}
                         >
                             <IoMdClose />
                         </Button>
@@ -94,16 +87,16 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
                 <div className="flex items-center gap-2 min-w-[200px]">
                     <EnumAutocomplete
                         enumType="Color"
-                        value={localFilters.color ?? null}
-                        onChange={(value) => handleLocalFilter('color', value)}
+                        value={localFilters.Color ?? null}
+                        onChange={(value) => handleLocalFilter('Color', value)}
                         label="Farve"
                     />
-                    {localFilters.color && (
+                    {localFilters.Color && (
                         <Button
                             isIconOnly
                             size="sm"
                             variant="light"
-                            onClick={() => handleClear('color')}
+                            onClick={() => handleClear('Color')}
                         >
                             <IoMdClose />
                         </Button>
@@ -113,16 +106,16 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
                 <div className="flex items-center gap-2 min-w-[200px]">
                     <EnumAutocomplete
                         enumType="Gender"
-                        value={localFilters.gender ?? null}
-                        onChange={(value) => handleLocalFilter('gender', value)}
+                        value={localFilters.Gender ?? null}
+                        onChange={(value) => handleLocalFilter('Gender', value)}
                         label="Køn"
                     />
-                    {localFilters.gender && (
+                    {localFilters.Gender && (
                         <Button
                             isIconOnly
                             size="sm"
                             variant="light"
-                            onClick={() => handleClear('gender')}
+                            onClick={() => handleClear('Gender')}
                         >
                             <IoMdClose />
                         </Button>
@@ -130,19 +123,47 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
                 </div>
 
                 <div className="flex items-center gap-2">
-                    {/* Fix Switch labeling */}
-                    <Switch
-                        id="approved-combination"
-                        aria-labelledby="approved-combination-label"
-                        isSelected={localFilters.approvedRaceColorCombination || false}
-                        onValueChange={(checked) => {
-                            handleLocalFilter('approvedRaceColorCombination', checked ? 'true' : null);
-                        }}
-                    >
-                        <span id="approved-combination-label">
-                            Godkendt kombination
-                        </span>
-                    </Switch>
+                    <Input
+                        placeholder="Min Postnummer"
+                        type="number"
+                        value={localFilters.MinZipCode?.toString() ?? ''}
+                        onChange={(e) => handleLocalFilter('MinZipCode', e.target.value ? parseInt(e.target.value) : null)}
+                        className="max-w-xs"
+                        endContent={
+                            localFilters.MinZipCode && (
+                                <Button
+                                    isIconOnly
+                                    size="sm"
+                                    variant="light"
+                                    onClick={() => handleClear('MinZipCode')}
+                                >
+                                    <IoMdClose />
+                                </Button>
+                            )
+                        }
+                    />
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <Input
+                        placeholder="Max Postnummer"
+                        type="number"
+                        value={localFilters.MaxZipCode?.toString() ?? ''}
+                        onChange={(e) => handleLocalFilter('MaxZipCode', e.target.value ? parseInt(e.target.value) : null)}
+                        className="max-w-xs"
+                        endContent={
+                            localFilters.MaxZipCode && (
+                                <Button
+                                    isIconOnly
+                                    size="sm"
+                                    variant="light"
+                                    onClick={() => handleClear('MaxZipCode')}
+                                >
+                                    <IoMdClose />
+                                </Button>
+                            )
+                        }
+                    />
                 </div>
             </div>
         </SectionNav>

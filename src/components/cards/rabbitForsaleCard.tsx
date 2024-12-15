@@ -10,7 +10,7 @@ interface Props {
     onClick?: () => void;
 }
 
-export default function RabbitCard({ rabbit, onClick }: Props) {
+export default function RabbitForsaleCard({ rabbit, onClick }: Props) {
     const profileImage = rabbit.profilePicture || '/default-rabbit.jpg';
 
     return (

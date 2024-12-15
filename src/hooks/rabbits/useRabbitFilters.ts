@@ -1,4 +1,4 @@
-// src/hooks/rabbits/useFilteredRabbits.ts
+// src/hooks/rabbits/useRabbitFilters.ts
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ForSaleFilters } from '@/types/filterTypes';
@@ -10,9 +10,13 @@ export function useFilteredRabbits() {
     
     // Initialize filters from URL
     const initialFilters: ForSaleFilters = {
-        rightEarId: searchParams.get('rightEarId') || undefined,
-        race: searchParams.get('race') || undefined,
-        gender: searchParams.get('gender') || undefined,
+        RightEarId: searchParams.get('rightEarId') || undefined,
+        BornAfter: searchParams.get('bornAfter') || undefined,
+        MinZipCode: searchParams.get('minZipCode') ? parseInt(searchParams.get('minZipCode')!) : undefined,
+        MaxZipCode: searchParams.get('maxZipCode') ? parseInt(searchParams.get('maxZipCode')!) : undefined,
+        Race: searchParams.get('race') || undefined,
+        Color: searchParams.get('color') || undefined,
+        Gender: searchParams.get('gender') || undefined,
     };
 
     const [filters, setFilters] = useState<ForSaleFilters>(initialFilters);
@@ -22,7 +26,7 @@ export function useFilteredRabbits() {
         setFilters(newFilters);
         const params = new URLSearchParams();
         Object.entries(newFilters).forEach(([key, value]) => {
-            if (value) params.append(key, value);
+            if (value !== undefined) params.append(key, value.toString());
         });
         router.replace(`/rabbits/for-sale${params.toString() ? `?${params}` : ''}`);
     };

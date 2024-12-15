@@ -15,7 +15,7 @@ export function useAuth() {
             });
             
             const isAuthenticated = response.headers.get('X-Is-Authenticated') === 'true';
-            console.log('🔒 Auth state:', { isAuthenticated });
+            //console.log('🔒 Auth state:', { isAuthenticated });
             setIsLoggedIn(isAuthenticated);
             return isAuthenticated;
         } catch (error) {

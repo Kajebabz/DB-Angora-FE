@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useFilteredRabbits } from '@/hooks/rabbits/useRabbitFilters';
 import ForSaleNav from '@/components/sectionNav/variants/rabbitSaleNav';
-import RabbitCard from '@/components/cards/rabbitCard';
+import RabbitForsaleCard from '@/components/cards/rabbitForsaleCard';
 
 export default function RabbitsForSalePage() {
     const router = useRouter();
@@ -25,7 +25,7 @@ export default function RabbitsForSalePage() {
             />
             <div className="rabbit-card-grid">
                 {rabbits.map((rabbit) => (
-                    <RabbitCard 
+                    <RabbitForsaleCard 
                         key={rabbit.earCombId} 
                         rabbit={rabbit}
                         onClick={() => handleCardClick(rabbit.earCombId)}

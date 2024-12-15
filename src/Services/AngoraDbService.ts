@@ -1,5 +1,5 @@
 // src/services/AngoraDbService.ts
-import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_ForsalePreviewList, Rabbit_ForsalePreviewDTO, Rabbit_CreateDTO, LoginResponse } from "@/types/backendTypes";
+import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_ForsalePreviewList, Rabbit_CreateDTO, LoginResponse, Rabbits_PreviewList, Rabbit_PreviewDTO } from "@/types/backendTypes";
 import { ForSaleFilters } from "@/types/filterTypes";
 import { getApiUrl } from '@/config/apiConfig';
 
@@ -28,7 +28,7 @@ export async function CreateRabbit(rabbitData: Rabbit_CreateDTO, accessToken: st
     return response.json();
 }
 
-export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_ForsalePreviewList> {
+export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
     const data = await fetch(getApiUrl('Account/Rabbits_Owned'), {
         headers: { Authorization: `Bearer ${accessToken}` }
     });
@@ -38,26 +38,25 @@ export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_Forsal
 }
 
 export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbits_ForsalePreviewList> {
-    const queryParams = new URLSearchParams();
+    const params = new URLSearchParams();
     
     if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
-            if (value !== undefined && value !== '' && value !== null) {
-                if (typeof value === 'boolean') {
-                    queryParams.append(key, value.toString());
-                } else if (typeof value === 'string' && value.trim() !== '') {
-                    queryParams.append(key, value.trim());
-                }
+            if (value != null) {
+                params.append(key, value.toString());
             }
         });
     }
 
-    const queryString = queryParams.toString();
-    const url = `${getApiUrl('Rabbit/Forsale')}${queryString ? `?${queryString}` : ''}`;
-    
+    const url = `${getApiUrl('Rabbit/Forsale')}${params.toString() ? `?${params}` : ''}`;
     console.log('Fetching URL:', url);
-    const data = await fetch(url);
-    return data.json();
+    
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`API call failed: ${response.status}`);
+    }
+
+    return response.json();
 }
 
 export async function GetRabbitsForBreeding(): Promise<Rabbits_ForsalePreviewList> {
@@ -105,7 +104,7 @@ export async function EditRabbit(earCombId: string, rabbitData: Rabbit_UpdateDTO
     return response.json();
 }
 
-export async function DeleteRabbit(earCombId: string, accessToken: string): Promise<Rabbit_ForsalePreviewDTO> {
+export async function DeleteRabbit(earCombId: string, accessToken: string): Promise<Rabbit_PreviewDTO> {
     const response = await fetch(getApiUrl(`Rabbit/Delete/${earCombId}`), {
         method: 'DELETE',
         headers: { 
@@ -127,7 +126,6 @@ export async function DeleteRabbit(earCombId: string, accessToken: string): Prom
 
     return response.json();
 }
-
 
 export async function Login(userName: string, password: string): Promise<LoginResponse> {
     const response = await fetch(getApiUrl('Auth/Login'), {
