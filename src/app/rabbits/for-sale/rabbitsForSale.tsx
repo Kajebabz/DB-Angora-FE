@@ -1,7 +1,7 @@
 // src/app/rabbits/for-sale/rabbitsForSale.tsx
 'use client'
 import { useRouter } from 'next/navigation';
-import { useFilteredRabbits } from '@/hooks/rabbits/useRabbitFilters';
+import { useFilteredRabbits } from '@/hooks/rabbits/useRabbitForsaleFilter';
 import ForSaleNav from '@/components/sectionNav/variants/rabbitSaleNav';
 import RabbitForsaleCard from '@/components/cards/rabbitForsaleCard';
 

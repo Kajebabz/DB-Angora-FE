@@ -1,4 +1,4 @@
-// src/hooks/rabbits/useRabbitFilters.ts
+// src/hooks/rabbits/useRabbitForsaleFilters.ts
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ForSaleFilters } from '@/types/filterTypes';

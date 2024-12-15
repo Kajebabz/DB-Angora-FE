@@ -1,10 +1,11 @@
 // src/components/navbar/TopNav.tsx
 'use client'
 import NextLink from 'next/link';
-import { 
-    Navbar, NavbarBrand, NavbarContent, NavbarItem, 
-    Avatar, Dropdown, DropdownTrigger, DropdownMenu, 
-    DropdownItem} from "@nextui-org/react";
+import {
+    Navbar, NavbarBrand, NavbarContent, NavbarItem,
+    Avatar, Dropdown, DropdownTrigger, DropdownMenu,
+    DropdownItem
+} from "@nextui-org/react";
 import { GiRabbit } from "react-icons/gi";
 import { FaUserCircle } from "react-icons/fa";
 import { usePathname } from 'next/navigation';
@@ -72,14 +73,18 @@ export default function TopNav() {
                                 />
                             </DropdownTrigger>
                             <DropdownMenu aria-label="Profil handlinger">
-                                <DropdownItem key="mine-kaniner">
+                                <DropdownItem
+                                    key="mine-kaniner"
+                                    textValue="Mine Kaniner"
+                                >
                                     <NextLink href="/rabbits/own" className="w-full block">
                                         Mine Kaniner
                                     </NextLink>
                                 </DropdownItem>
-                                <DropdownItem 
+                                <DropdownItem
                                     key="logout"
                                     className="text-danger"
+                                    textValue="Log ud"
                                     onClick={logout}
                                 >
                                     Log ud
@@ -87,8 +92,8 @@ export default function TopNav() {
                             </DropdownMenu>
                         </Dropdown>
                     ) : (
-                        <div 
-                            className="flex items-center gap-2 cursor-pointer" 
+                        <div
+                            className="flex items-center gap-2 cursor-pointer"
                             onClick={() => setIsLoginOpen(true)}
                         >
                             <span className="text-zinc-400 hover:text-zinc-200">

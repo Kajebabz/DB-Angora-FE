@@ -2,9 +2,9 @@
 'use client';
 import { Rabbit_PreviewDTO } from '@/types/backendTypes';
 import { useRouter } from 'next/navigation';
-import RabbitCard from '@/components/cards/rabbitForsaleCard';
 import OwnNav from '@/components/sectionNav/variants/rabbitOwnNav';
-import { useOwnRabbits } from '@/hooks/rabbits/useOwnRabbits';
+import { useOwnRabbits } from '@/hooks/rabbits/useRabbitOwnFilter';
+import RabbitPreviewCard from '@/components/cards/rabbitPreviewCard';
 
 type Props = {
     rabbits: Rabbit_PreviewDTO[];
@@ -14,29 +14,34 @@ export default function RabbitOwnList({ rabbits }: Props) {
     const router = useRouter();
     const { 
         filteredRabbits, 
-        filters, 
-        setSearch, 
-        setFilterGender 
+        filters,
+        setSearch,
+        setFilterGender,
+        setFilterRace,
+        setFilterColor,
+        setFilterForSale,
+        setFilterForBreeding,
+        setShowDeceased
     } = useOwnRabbits(rabbits);
-
-    const handleCardClick = (earCombId: string) => {
-        router.push(`/rabbits/profile/${earCombId}`);
-    };
 
     return (
         <>
             <OwnNav
-                search={filters.search}
-                filterGender={filters.filterGender}
+                {...filters}
                 onSearchChange={setSearch}
                 onGenderChange={setFilterGender}
+                onRaceChange={setFilterRace}
+                onColorChange={setFilterColor}
+                onForSaleChange={setFilterForSale}
+                onForBreedingChange={setFilterForBreeding}
+                onShowDeceasedChange={setShowDeceased}
             />
             <div className="rabbit-card-grid">
                 {filteredRabbits.map((rabbit) => (
-                    <RabbitCard 
+                    <RabbitPreviewCard
                         key={rabbit.earCombId}
                         rabbit={rabbit}
-                        onClick={() => handleCardClick(rabbit.earCombId)}
+                        onClick={() => router.push(`/rabbits/profile/${rabbit.earCombId}`)}
                     />
                 ))}
             </div>

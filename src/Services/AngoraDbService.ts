@@ -49,7 +49,7 @@ export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbi
     }
 
     const url = `${getApiUrl('Rabbit/Forsale')}${params.toString() ? `?${params}` : ''}`;
-    console.log('Fetching URL:', url);
+    //console.log('Fetching URL:', url);
     
     const response = await fetch(url);
     if (!response.ok) {

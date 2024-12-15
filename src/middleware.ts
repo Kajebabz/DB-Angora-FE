@@ -2,17 +2,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// export function middleware(request: NextRequest) {
-//   const token = request.cookies.get('accessToken')
-  
-//   if (!token || isTokenExpired(token.value)) {
-//     const returnUrl = encodeURIComponent(request.nextUrl.pathname)
-//     return NextResponse.redirect(new URL(`/auth/login?returnTo=${returnUrl}`, request.url))
-//   }
-
-//   return NextResponse.next()
-// }
-
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('accessToken')
 
