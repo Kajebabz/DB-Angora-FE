@@ -24,10 +24,11 @@ export function useFilteredRabbits() {
 
     const updateFilters = (newFilters: ForSaleFilters) => {
         setFilters(newFilters);
-        const params = new URLSearchParams();
-        Object.entries(newFilters).forEach(([key, value]) => {
-            if (value !== undefined) params.append(key, value.toString());
-        });
+        const params = new URLSearchParams(
+            Object.entries(newFilters)
+                .filter(([, value]) => value !== undefined)
+                .map(([key, value]) => [key, value.toString()])
+        );
         router.replace(`/rabbits/for-sale${params.toString() ? `?${params}` : ''}`);
     };
 

@@ -15,26 +15,20 @@ export default function ForSaleNav({ activeFilters, onFilterChange }: Props) {
     const [localFilters, setLocalFilters] = useState<ForSaleFilters>(activeFilters);
 
     const handleLocalFilter = (key: keyof ForSaleFilters, value: string | number | null) => {
-        const newFilters = { ...localFilters } as ForSaleFilters;
-        if (value === null) {
-            newFilters[key] = undefined;
-        } else {
-            if (key === 'MinZipCode' || key === 'MaxZipCode') {
-                newFilters[key] = Number(value);
-            } else {
-                newFilters[key] = value as string;
-            }
-        }
-        console.log('Updating filters:', key, value, newFilters);
-        setLocalFilters(newFilters);
+        setLocalFilters(prev => ({
+            ...prev,
+            [key]: value === null ? undefined : value
+        }));
     };
 
     const handleSearch = () => onFilterChange(localFilters);
     const handleClear = (key: keyof ForSaleFilters) => {
-        const newFilters: ForSaleFilters = { ...localFilters };
-        delete newFilters[key];
-        setLocalFilters(newFilters);
-        onFilterChange(newFilters);
+        setLocalFilters(prev => {
+            const newFilters = { ...prev };
+            delete newFilters[key];
+            return newFilters;
+        });
+        onFilterChange(localFilters);
     };
 
     return (

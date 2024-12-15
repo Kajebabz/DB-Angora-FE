@@ -15,20 +15,8 @@ export function useRabbitsForSale(filters: ForSaleFilters) {
         
         const fetchRabbits = async () => {
             try {
-                // Clean filters - remove undefined values
-                const cleanFilters = Object.entries(filters).reduce((acc, [key, value]) => {
-                    if (value !== undefined && value !== null) {
-                        acc[key] = value;
-                    }
-                    return acc;
-                }, {} as ForSaleFilters);
-
-                //console.log('Clean filters:', cleanFilters); // Debug log
-                
-                const data = await GetRabbitsForSale(cleanFilters);
-                
+                const data = await GetRabbitsForSale(filters);
                 if (isMounted) {
-                    console.log('Received rabbits:', data);
                     setRabbits(data);
                     setError(null);
                 }
