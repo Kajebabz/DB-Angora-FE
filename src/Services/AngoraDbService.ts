@@ -1,5 +1,5 @@
 // src/services/AngoraDbService.ts
-import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_ForsalePreviewList, Rabbit_CreateDTO, LoginResponse, Rabbits_PreviewList, Rabbit_PreviewDTO } from "@/types/backendTypes";
+import { Rabbit_UpdateDTO, Rabbit_ProfileDTO, Rabbits_ForsalePreviewList, Rabbit_CreateDTO, LoginResponse, Rabbits_PreviewList, Rabbit_PreviewDTO, Rabbit_ForsaleProfileDTO } from "@/types/backendTypes";
 import { ForSaleFilters } from "@/types/filterTypes";
 import { getApiUrl } from '@/config/apiConfig';
 
@@ -28,14 +28,7 @@ export async function CreateRabbit(rabbitData: Rabbit_CreateDTO, accessToken: st
     return response.json();
 }
 
-export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
-    const data = await fetch(getApiUrl('Account/Rabbits_Owned'), {
-        headers: { Authorization: `Bearer ${accessToken}` }
-    });
-    const ownRabbits = await data.json();
-    //console.log('API Response:', ownRabbits); // Debug log
-    return ownRabbits;
-}
+
 
 export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbits_ForsalePreviewList> {
     const params = new URLSearchParams();
@@ -59,9 +52,26 @@ export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbi
     return response.json();
 }
 
+export async function GetRabbitForsaleProfile(earCombId: string): Promise<Rabbit_ForsaleProfileDTO> {
+    const response = await fetch(getApiUrl(`Rabbit/ForsaleProfile/${earCombId}`));
+    if (!response.ok) {
+        throw new Error(`API call failed: ${response.status}`);
+    }
+    return response.json();
+}
+
 export async function GetRabbitsForBreeding(): Promise<Rabbits_ForsalePreviewList> {
     const data = await fetch(getApiUrl('Rabbit/Forbreeding'));
     return data.json();
+}
+
+export async function GetOwnRabbits(accessToken: string): Promise<Rabbits_PreviewList> {
+    const data = await fetch(getApiUrl('Account/Rabbits_Owned'), {
+        headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const ownRabbits = await data.json();
+    //console.log('API Response:', ownRabbits); // Debug log
+    return ownRabbits;
 }
 
 export async function GetRabbitProfile(accessToken: string, earCombId: string): Promise<Rabbit_ProfileDTO> {
@@ -138,5 +148,24 @@ export async function Login(userName: string, password: string): Promise<LoginRe
         throw new Error(`Login failed: ${response.status}`);
     }
 
+    return response.json();
+}
+
+export type RabbitEnum = 'Race' | 'Color' | 'Gender' | 'IsPublic';
+
+const ENUM_ENDPOINTS = {
+    Race: 'Enum/Races',
+    Color: 'Enum/Colors',
+    Gender: 'Enum/Genders',
+    IsPublic: 'Enum/IsPublic'
+} as const;
+
+export async function GetEnumValues(enumType: RabbitEnum): Promise<string[]> {
+    const endpoint = ENUM_ENDPOINTS[enumType];
+    const response = await fetch(getApiUrl(endpoint));
+    
+    if (!response.ok) {
+        throw new Error(`Failed to fetch ${enumType} enum values: ${response.status}`);
+    }
     return response.json();
 }

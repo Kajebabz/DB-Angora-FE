@@ -2,34 +2,43 @@
 import { useState } from 'react';
 import { Rabbit_PreviewDTO } from '@/types/backendTypes';
 
+export interface OwnFilters {
+    search: string;
+    Gender: string | undefined;
+    Race: string | undefined;
+    Color: string | undefined;
+    ForSale: boolean;
+    ForBreeding: boolean;
+    showDeceased: boolean;
+}
+
 export function useOwnRabbits(initialRabbits: Rabbit_PreviewDTO[]) {
-    const [search, setSearch] = useState('');
-    const [filterGender, setFilterGender] = useState('all');
-    const [filterRace, setFilterRace] = useState('all');
-    const [filterColor, setFilterColor] = useState('all');
-    const [filterForSale, setFilterForSale] = useState('all');
-    const [filterForBreeding, setFilterForBreeding] = useState('all');
-    const [showDeceased, setShowDeceased] = useState(false);
+    const [filters, setFilters] = useState<OwnFilters>({
+        search: '',
+        Gender: undefined,
+        Race: undefined,
+        Color: undefined,
+        ForSale: false,
+        ForBreeding: false,
+        showDeceased: false
+    });
 
     const filteredRabbits = initialRabbits.filter(rabbit => {
-        // Exclusive deceased/living filter
         const isDeceased = rabbit.dateOfDeath !== null;
-        if (showDeceased !== isDeceased) return false;
+        if (filters.showDeceased !== isDeceased) return false;
 
-        // Search across multiple fields with null checks
-        const matchesSearch = search === '' || (
-            (rabbit.nickName?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-            (rabbit.earCombId.toLowerCase().includes(search.toLowerCase())) ||
-            (rabbit.race?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-            (rabbit.color?.toLowerCase().includes(search.toLowerCase()) ?? false)
+        const matchesSearch = filters.search === '' || (
+            (rabbit.nickName?.toLowerCase().includes(filters.search.toLowerCase()) ?? false) ||
+            (rabbit.earCombId.toLowerCase().includes(filters.search.toLowerCase())) ||
+            (rabbit.race?.toLowerCase().includes(filters.search.toLowerCase()) ?? false) ||
+            (rabbit.color?.toLowerCase().includes(filters.search.toLowerCase()) ?? false)
         );
         
-        // Handle all filter conditions with null checks
-        const matchesGender = filterGender === 'all' || rabbit.gender === filterGender;
-        const matchesRace = filterRace === 'all' || rabbit.race === filterRace;
-        const matchesColor = filterColor === 'all' || rabbit.color === filterColor;
-        const matchesForSale = filterForSale === 'all' || rabbit.forSale === filterForSale;
-        const matchesForBreeding = filterForBreeding === 'all' || rabbit.forBreeding === filterForBreeding;
+        const matchesGender = !filters.Gender || rabbit.gender === filters.Gender;
+        const matchesRace = !filters.Race || rabbit.race === filters.Race;
+        const matchesColor = !filters.Color || rabbit.color === filters.Color;
+        const matchesForSale = !filters.ForSale || rabbit.forSale === 'Ja';
+        const matchesForBreeding = !filters.ForBreeding || rabbit.forBreeding === 'Ja';
         
         return matchesSearch && matchesGender && matchesRace && 
                matchesColor && matchesForSale && matchesForBreeding;
@@ -37,16 +46,7 @@ export function useOwnRabbits(initialRabbits: Rabbit_PreviewDTO[]) {
 
     return {
         filteredRabbits,
-        filters: { 
-            search, filterGender, filterRace, filterColor, 
-            filterForSale, filterForBreeding, showDeceased 
-        },
-        setSearch,
-        setFilterGender,
-        setFilterRace,
-        setFilterColor,
-        setFilterForSale,
-        setFilterForBreeding,
-        setShowDeceased
+        filters,
+        setFilters
     };
 }

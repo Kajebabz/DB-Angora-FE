@@ -2,9 +2,7 @@
 "use client"
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { useEffect, useState } from 'react';
-import { getEnumValues } from '@/services/enumService';
-import { RabbitEnum } from '@/types/enumTypes';
-
+import { RabbitEnum, GetEnumValues } from '@/services/AngoraDbService';
 interface Props {
     enumType: RabbitEnum;
     value: string | null;
@@ -20,7 +18,7 @@ export default function EnumAutocomplete({ enumType, value, onChange, label, id 
     useEffect(() => {
         const loadOptions = async () => {
             try {
-                const values = await getEnumValues(enumType);
+                const values = await GetEnumValues(enumType);
                 setOptions(values);
             } catch (error) {
                 console.error(`Failed to load ${enumType} options:`, error);

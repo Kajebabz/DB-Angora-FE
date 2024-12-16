@@ -12,29 +12,15 @@ type Props = {
 
 export default function RabbitOwnList({ rabbits }: Props) {
     const router = useRouter();
-    const { 
-        filteredRabbits, 
-        filters,
-        setSearch,
-        setFilterGender,
-        setFilterRace,
-        setFilterColor,
-        setFilterForSale,
-        setFilterForBreeding,
-        setShowDeceased
-    } = useOwnRabbits(rabbits);
+    const { filteredRabbits, filters, setFilters } = useOwnRabbits(rabbits);
 
     return (
         <>
             <OwnNav
-                {...filters}
-                onSearchChange={setSearch}
-                onGenderChange={setFilterGender}
-                onRaceChange={setFilterRace}
-                onColorChange={setFilterColor}
-                onForSaleChange={setFilterForSale}
-                onForBreedingChange={setFilterForBreeding}
-                onShowDeceasedChange={setShowDeceased}
+                activeFilters={filters}
+                onFilterChange={(newFilters) => 
+                    setFilters(prev => ({ ...prev, ...newFilters }))
+                }
             />
             <div className="rabbit-card-grid">
                 {filteredRabbits.map((rabbit) => (

@@ -10,7 +10,7 @@ export default function RabbitsForSalePage() {
     const { rabbits, filters, isLoading, updateFilters } = useFilteredRabbits();
 
     const handleCardClick = (earCombId: string) => {
-        router.push(`/rabbits/profile/${earCombId}`);
+        router.push(`/rabbits/forsale-profile/${earCombId}`);
     };
 
     if (isLoading) {

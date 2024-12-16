@@ -1,3 +1,4 @@
+// src/components/cards/rabbitPreviewCard.tsx
 'use client';
 
 import { Rabbit_PreviewDTO } from '@/types/backendTypes';

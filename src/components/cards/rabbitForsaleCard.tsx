@@ -1,4 +1,4 @@
-// src/components/cards/rabbitCard.tsx
+// src/components/cards/rabbitForsaleCard.tsx
 'use client';
 
 import { Rabbit_ForsalePreviewDTO } from '@/types/backendTypes';

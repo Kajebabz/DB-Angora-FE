@@ -1,4 +1,4 @@
-// src/components/cards/RabbitCardGrid.tsx
+// src/components/cards/rabbitCardGrid.tsx
 import { Rabbit_ForsalePreviewDTO } from '@/types/backendTypes';
 import RabbitForsaleCard from './rabbitForsaleCard';
 

@@ -13,25 +13,30 @@ export interface Rabbit_ForsalePreviewDTO {
 }
 export type Rabbits_ForsalePreviewList = Rabbit_ForsalePreviewDTO[];
 
+interface RabbitPhoto {
+    id: number;
+    filePath: string;
+    fileName: string;
+    uploadDate: string;
+    rabbitId: string;
+    userId: string;
+    isProfilePicture: boolean;
+}
+
 export interface Rabbit_ForsaleProfileDTO {
     earCombId: string;
-    nickName: string | null;
-    originFullName: string | null;
-    ownerFullName: string | null;
-    race: string | null;
-    color: string | null;
-    approvedRaceColorCombination: boolean | null;
-    dateOfBirth: string | null;  // API: string($date) format, nullable
-    dateOfDeath: string | null;
-    isJuvenile: boolean | null;
-    gender: string | null;
-    forSale: string | null;
-    forBreeding: string | null;
-    fatherId_Placeholder: string | null;
-    father_EarCombId: string | null;
-    motherId_Placeholder: string | null;
-    mother_EarCombId: string | null;
-    children: Rabbit_ChildPreviewDTO[];
+    nickName: string;
+    race: string;
+    color: string;
+    dateOfBirth: string;
+    gender: string;
+    forSale: string;
+    forBreeding: string;
+    profilePicture: string;
+    photos: RabbitPhoto[];
+    ownerFullName: string;
+    ownerPhoneNumber: string;
+    ownerEmail: string;
 }
 
 
@@ -123,3 +128,4 @@ export interface LoginResponse {
     refreshToken: string;
     errors: string[];
 }
+

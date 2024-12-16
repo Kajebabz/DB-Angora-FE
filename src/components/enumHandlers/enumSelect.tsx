@@ -2,8 +2,7 @@
 "use client"
 import { Select, SelectItem } from "@nextui-org/react";
 import { useEffect, useState } from 'react';
-import { getEnumValues } from '@/services/enumService';
-import { RabbitEnum } from '@/types/enumTypes';
+import { RabbitEnum, GetEnumValues } from '@/services/AngoraDbService';
 
 interface Props {
     enumType: RabbitEnum;
@@ -20,7 +19,7 @@ export default function EnumSelect({ enumType, value, onChange, label, id }: Pro
     useEffect(() => {
         const loadOptions = async () => {
             try {
-                const values = await getEnumValues(enumType);
+                const values = await GetEnumValues(enumType);
                 setOptions(values);
             } catch (error) {
                 console.error(`Failed to load ${enumType} options:`, error);
