@@ -28,6 +28,22 @@ export async function POST(request: NextRequest) {
             sameSite: 'lax',
             path: '/'
         });
+        // AccessToken er encoded / krypteret med base64 
+        // Henter accessToken og splitter på punktum (vi vil have anden del, hvor identity claim / userProfileId gemmer sig)
+        const Base64EncodedAccessTokenFragment = loginResponse.accessToken.split('.')[1]
+        // Decoder base64 med atob funktion
+        const DecodedBase64AccessTokenFragment = atob(Base64EncodedAccessTokenFragment)
+        // Parser AccessTokenFragment som json 
+        const AccessTokenFragmentAsJSON = JSON.parse(DecodedBase64AccessTokenFragment)
+        // Her kalder vi på nameidentifier for at få userProfileId 
+        const userProfileId = AccessTokenFragmentAsJSON["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]
+
+        response.cookies.set('userProfileId', userProfileId, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            path: '/'
+        });
 
         return response;
     } catch (error) {
