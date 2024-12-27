@@ -129,3 +129,14 @@ export interface LoginResponse {
     errors: string[];
 }
 
+export type User_ProfileDTO = {
+    "breederRegNo": string | null,
+    "firstName": string | null,
+    "lastName": string | null,
+    "publicProfile": string | null,
+    "roadNameAndNo": string | null,
+    "city": string | null,
+    "zipCode": number | null,
+    "email": string | null,
+    "phone": string | null
+}

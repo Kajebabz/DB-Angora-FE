@@ -28,8 +28,6 @@ export async function CreateRabbit(rabbitData: Rabbit_CreateDTO, accessToken: st
     return response.json();
 }
 
-
-
 export async function GetRabbitsForSale(filters?: ForSaleFilters): Promise<Rabbits_ForsalePreviewList> {
     const params = new URLSearchParams();
     
@@ -168,4 +166,11 @@ export async function GetEnumValues(enumType: RabbitEnum): Promise<string[]> {
         throw new Error(`Failed to fetch ${enumType} enum values: ${response.status}`);
     }
     return response.json();
+}
+export async function GetUserProfile(accessToken: string, userProfileId: string): Promise<User_ProfileDTO> {
+    const data = await fetch(getApiUrl(`Account/UserProfile/${userProfileId}`), {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const userProfile = await data.json();
+    return userProfile;
 }

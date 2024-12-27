@@ -16,7 +16,7 @@ import LoginModal from '../modals/loginModal';
 export default function TopNav() {
     const pathname = usePathname();
     const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const { isLoggedIn, logout, refresh } = useAuth();
+    const { isLoggedIn, userName, logout, refresh } = useAuth();
 
     useEffect(() => {
         refresh();
@@ -63,22 +63,26 @@ export default function TopNav() {
                     {isLoggedIn ? (
                         <Dropdown placement="bottom-end">
                             <DropdownTrigger>
-                                <Avatar
-                                    isBordered
-                                    as="button"
-                                    className="transition-transform"
-                                    color="success"
-                                    size="sm"
-                                    showFallback
-                                />
+                                <div className="flex items-center gap-5">
+                                    <span className="text-emerald-500"> {userName} </span>
+                                    <Avatar
+                                        isBordered
+                                        as="button"
+                                        color="success"
+                                        size="sm"
+                                        showFallback
+                                    />
+                                </div>
                             </DropdownTrigger>
-                            <DropdownMenu aria-label="Profil handlinger">
-                                <DropdownItem
-                                    key="mine-kaniner"
-                                    textValue="Mine Kaniner"
-                                >
+                            <DropdownMenu aria-label="Profil handlinger" className='text-zinc-600'>
+                                <DropdownItem key="mine-kaniner">
                                     <NextLink href="/rabbits/own" className="w-full block">
                                         Mine Kaniner
+                                    </NextLink>
+                                </DropdownItem>
+                                <DropdownItem key="user-profile">
+                                    <NextLink href="/user/profile" className="w-full block">
+                                        UserProfile
                                     </NextLink>
                                 </DropdownItem>
                                 <DropdownItem
