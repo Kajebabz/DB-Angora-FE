@@ -6,9 +6,15 @@ import EnumAutocomplete from '@/components/enumHandlers/enumAutocomplete';  // F
 import { useRabbitProfile } from '@/hooks/rabbits/useRabbitProfile';
 import { toast } from "react-toastify";
 import RabbitProfileNav from "@/components/sectionNav/variants/rabbitProfileNav";
+import { PiRabbitFill, PiRabbit } from "react-icons/pi";
+
 
 type Props = {
     rabbitProfile: Rabbit_ProfileDTO;
+};
+
+const isParentValid = (placeholderId: string | null, actualId: string | null): boolean => {
+    return !!placeholderId && placeholderId === actualId;
 };
 
 export default function RabbitProfile({ rabbitProfile }: Props) {
@@ -27,10 +33,11 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
         toast.info('Skift ejer funktionalitet kommer snart');
     };
 
+
     const propertyLabels: Record<keyof Omit<Rabbit_ProfileDTO, "father_EarCombId" | "mother_EarCombId" | "children">, string> = {
         earCombId: "Øremærke ID",
         nickName: "Navn",
-        originFullName: "Oprdrætter",
+        originFullName: "Opdrætter",
         ownerFullName: "Ejer",
         race: "Race",
         color: "Farve",
@@ -45,10 +52,40 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
         motherId_Placeholder: "Mor øremærke",
     };
 
+    const renderParentCell = (key: 'fatherId_Placeholder' | 'motherId_Placeholder', value: string | null) => {
+        const actualId = key === 'fatherId_Placeholder' ? rabbitProfile.father_EarCombId : rabbitProfile.mother_EarCombId;
+        const isValid = isParentValid(value, actualId);
+
+        return (
+            <div className="flex items-center gap-2">
+                <span>{value || 'Ikke angivet'}</span>
+                {value && (
+                    isValid ? (
+                        <PiRabbitFill 
+                            className="w-5 h-5 text-green-500" 
+                            title="Forælder findes i systemet" 
+                        />
+                    ) : (
+                        <PiRabbit 
+                            className="w-5 h-5 text-zinc-400" 
+                            title="Forælder findes ikke i systemet" 
+                        />
+                    )
+                )}
+            </div>
+        );
+    };
+
     const renderCell = (key: keyof Rabbit_ProfileDTO, value: unknown) => {
         if (!isEditing) {
             if (key === 'dateOfBirth' || key === 'dateOfDeath') {
                 return value ? new Date(value as string).toLocaleDateString() : 'Ikke angivet';
+            }
+            if (key === 'fatherId_Placeholder' || key === 'motherId_Placeholder') {
+                return renderParentCell(key, value as string | null);
+            }
+            if (key === 'originFullName') {
+                return value ? value.toString() : 'Ikke fundet i systemet';
             }
             if (typeof value === 'boolean') {
                 return value ? 'Ja' : 'Nej';
@@ -120,6 +157,17 @@ export default function RabbitProfile({ rabbitProfile }: Props) {
                     type="date"
                     value={editedData[key] || ''}
                     onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
+                    aria-label={propertyLabels[key]}
+                />
+            );
+        }
+
+        if (key === 'fatherId_Placeholder' || key === 'motherId_Placeholder') {
+            return (
+                <Input
+                    value={editedData[key] || ''}
+                    onChange={(e) => setEditedData({ ...editedData, [key]: e.target.value })}
+                    placeholder={`Indtast ${key === 'fatherId_Placeholder' ? 'far' : 'mor'} øremærke`}
                     aria-label={propertyLabels[key]}
                 />
             );
