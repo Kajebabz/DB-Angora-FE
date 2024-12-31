@@ -9,9 +9,7 @@ type PageProps = {
     searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export async function generateMetadata(
-    props: PageProps
-): Promise<Metadata> {
+export async function generateMetadata( props: PageProps): Promise<Metadata> {
     const { earCombId } = await props.params;
     try {
         const rabbit = await GetRabbitForsaleProfile(earCombId);
